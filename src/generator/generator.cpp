@@ -114,6 +114,18 @@ void FeatureGenerator::set_generate_count_numerical(bool enable) {
     m_pImpl->set_generate_count_numerical(enable);
 }
 
+void FeatureGenerator::set_generate_minimum_numerical(bool enable) {
+    m_pImpl->set_generate_minimum_numerical(enable);
+}
+
+void FeatureGenerator::set_generate_maximum_numerical(bool enable) {
+    m_pImpl->set_generate_maximum_numerical(enable);
+}
+
+void FeatureGenerator::set_generate_sum_frame_numerical(bool enable) {
+    m_pImpl->set_generate_sum_frame_numerical(enable);
+}
+
 void FeatureGenerator::set_generate_and_role(bool enable) {
     m_pImpl->set_generate_and_role(enable);
 }
@@ -203,6 +215,9 @@ GeneratedFeatures generate_features(
     bool generate_top_concept,
     bool generate_concept_distance_numerical,
     bool generate_count_numerical,
+    bool generate_minimum_numerical,
+    bool generate_maximum_numerical,
+    bool generate_sum_frame_numerical,
     bool generate_and_role,
     bool generate_compose_role,
     bool generate_diff_role,
@@ -237,6 +252,9 @@ GeneratedFeatures generate_features(
     generator.set_generate_top_concept(generate_top_concept);
     generator.set_generate_concept_distance_numerical(generate_concept_distance_numerical);
     generator.set_generate_count_numerical(generate_count_numerical);
+    generator.set_generate_minimum_numerical(generate_minimum_numerical);
+    generator.set_generate_maximum_numerical(generate_maximum_numerical);
+    generator.set_generate_sum_frame_numerical(generate_sum_frame_numerical);
     generator.set_generate_and_role(generate_and_role);
     generator.set_generate_compose_role(generate_compose_role);
     generator.set_generate_diff_role(generate_diff_role);

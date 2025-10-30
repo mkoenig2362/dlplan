@@ -126,7 +126,7 @@ PairsOfObjectIndices FrameBinaryDenotation::to_vector() const {
 
 PairsOfObjectIndices FrameBinaryDenotation::to_sorted_vector() const {
     PairsOfObjectIndices res;
-    res.reserve(size());
+    res.reserve(m_data.size());
     for (ObjectIndex i = 0; i < m_num_objects; ++i)
         for (ObjectIndex j = 0; j < m_num_objects; ++j)
             if (!std::isnan(get_value({i,j})))

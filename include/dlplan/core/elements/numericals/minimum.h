@@ -1,5 +1,5 @@
-#ifndef DLPLAN_INCLUDE_DLPLAN_CORE_ELEMENTS_NUMERICALS_COUNT_H_
-#define DLPLAN_INCLUDE_DLPLAN_CORE_ELEMENTS_NUMERICALS_COUNT_H_
+#ifndef DLPLAN_INCLUDE_DLPLAN_CORE_ELEMENTS_NUMERICALS_MINIMUM_H_
+#define DLPLAN_INCLUDE_DLPLAN_CORE_ELEMENTS_NUMERICALS_MINIMUM_H_
 
 #include "../utils.h"
 #include "../../../core.h"
@@ -25,17 +25,22 @@ class ReferenceCountedObjectFactory;
 namespace dlplan::core {
 
 template<typename T>
-class CountNumerical : public Numerical {
+class MinimumNumerical : public Numerical {
 private:
     const std::shared_ptr<const T> m_element;
 
     template<typename DENOTATION_TYPE>
-    void compute_result(const DENOTATION_TYPE& denot, int& result) const {
-        result = denot.size();
+    void compute_result(const DENOTATION_TYPE& denot, double& result) const {
+        result = std::numeric_limits<double>::infinity();
+        for (const auto& pos : denot.to_vector()) {
+            double value = denot.get_value(pos);
+            if (std::isnan(value)) continue;
+            result = std::min(result, value);
+        }
     }
 
     double evaluate_impl(const State& state, DenotationsCaches& caches) const override {
-        int denotation;
+        double denotation;
         compute_result(
             *m_element->evaluate(state, caches),
             denotation);
@@ -47,16 +52,16 @@ private:
         denotations.reserve(states.size());
         auto element_denotations = m_element->evaluate(states, caches);
         for (size_t i = 0; i < states.size(); ++i) {
-            int denotation;
+            double denotation;
             compute_result(
                 *(*element_denotations)[i],
                 denotation);
-            denotations.push_back((double)denotation);
+            denotations.push_back(denotation);
         }
         return denotations;
     }
 
-    CountNumerical(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const T> element)
+    MinimumNumerical(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const T> element)
         : Numerical(index, vocabulary_info, element->is_static()), m_element(element) { }
 
     template<typename... Ts>
@@ -65,7 +70,7 @@ private:
 public:
     bool are_equal_impl(const Numerical& other) const override {
         if (typeid(*this) == typeid(other)) {
-            const auto& other_derived = static_cast<const CountNumerical&>(other);
+            const auto& other_derived = static_cast<const MinimumNumerical&>(other);
             return m_is_static == other_derived.m_is_static
                 && m_element == other_derived.m_element;
         }
@@ -77,7 +82,7 @@ public:
     }
 
     double evaluate(const State& state) const override {
-        int result;
+        double result;
         compute_result(
             m_element->evaluate(state),
             result);
@@ -89,16 +94,16 @@ public:
     }
 
     void str_impl(std::stringstream& out) const override {
-        out << "n_count" << "(";
+        out << "n_minimum" << "(";
         m_element->str(out);
         out << ")";
     }
 
     int compute_evaluate_time_score_impl() const override {
         int score = m_element->compute_evaluate_time_score();
-        if (std::is_same<T, Concept>::value) {
+        if (std::is_same<T, FrameUnary>::value) {
             score += SCORE_LINEAR;
-        } else if (std::is_same<T, Role>::value) {
+        } else if (std::is_same<T, FrameBinary>::value) {
             score += SCORE_QUADRATIC;
         } else {
             throw std::runtime_error("Inclusion::compute_evaluate_time_score - unknown template parameter.");
@@ -112,19 +117,19 @@ public:
 
 namespace std {
     template<typename T>
-    struct less<std::shared_ptr<const dlplan::core::CountNumerical<T>>>
+    struct less<std::shared_ptr<const dlplan::core::MinimumNumerical<T>>>
     {
         bool operator()(
-            const std::shared_ptr<const dlplan::core::CountNumerical<T>>& left_numerical,
-            const std::shared_ptr<const dlplan::core::CountNumerical<T>>& right_numerical) const {
+            const std::shared_ptr<const dlplan::core::MinimumNumerical<T>>& left_numerical,
+            const std::shared_ptr<const dlplan::core::MinimumNumerical<T>>& right_numerical) const {
             return *left_numerical < *right_numerical;
         }
     };
 
     template<typename T>
-    struct hash<dlplan::core::CountNumerical<T>>
+    struct hash<dlplan::core::MinimumNumerical<T>>
     {
-        std::size_t operator()(const dlplan::core::CountNumerical<T>& numerical) const {
+        std::size_t operator()(const dlplan::core::MinimumNumerical<T>& numerical) const {
             return numerical.hash();
         }
     };

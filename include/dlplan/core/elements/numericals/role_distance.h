@@ -25,7 +25,7 @@ private:
 
     void compute_result(const RoleDenotation& role_from_denot, const RoleDenotation& role_denot, const RoleDenotation& role_to_denot, int& result) const;
 
-    int evaluate_impl(const State& state, DenotationsCaches& caches) const override;
+    double evaluate_impl(const State& state, DenotationsCaches& caches) const override;
 
     NumericalDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const override;
 
@@ -38,7 +38,7 @@ public:
 
     size_t hash_impl() const override;
 
-    int evaluate(const State& state) const override;
+    double evaluate(const State& state) const override;
 
     int compute_complexity_impl() const override;
 

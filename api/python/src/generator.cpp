@@ -33,6 +33,9 @@ void init_generator(py::module_ &m_generator) {
         .def("set_generate_top_concept", &FeatureGenerator::set_generate_top_concept)
         .def("set_generate_concept_distance_numerical", &FeatureGenerator::set_generate_concept_distance_numerical)
         .def("set_generate_count_numerical", &FeatureGenerator::set_generate_count_numerical)
+        .def("set_generate_minimum_numerical", &FeatureGenerator::set_generate_minimum_numerical)
+        .def("set_generate_maximum_numerical", &FeatureGenerator::set_generate_maximum_numerical)
+        .def("set_generate_sum_frame_numerical", &FeatureGenerator::set_generate_sum_frame_numerical)
         .def("set_generate_and_role", &FeatureGenerator::set_generate_and_role)
         .def("set_generate_compose_role", &FeatureGenerator::set_generate_compose_role)
         .def("set_generate_diff_role", &FeatureGenerator::set_generate_diff_role)
@@ -79,6 +82,9 @@ void init_generator(py::module_ &m_generator) {
         py::arg("generate_top_concept") = true,
         py::arg("generate_concept_distance_numerical") = true,
         py::arg("generate_count_numerical") = true,
+        py::arg("generate_minimum_numerical") = true,
+        py::arg("generate_maximum_numerical") = true,
+        py::arg("generate_sum_frame_numerical") = true,
         py::arg("generate_and_role") = true,
         py::arg("generate_compose_role") = false,
         py::arg("generate_diff_role") = false,

@@ -34,6 +34,9 @@
 
 #include "rules/numericals/concept_distance.h"
 #include "rules/numericals/count.h"
+#include "rules/numericals/minimum.h"
+#include "rules/numericals/maximum.h"
+#include "rules/numericals/sum_frame.h"
 
 #include "rules/booleans/empty.h"
 #include "rules/booleans/inclusion.h"
@@ -78,6 +81,9 @@ private:
     Rule_Ptr n_count;
     Rule_Ptr b_inclusion;
     Rule_Ptr n_concept_distance;
+    Rule_Ptr n_minimum;
+    Rule_Ptr n_maximum;
+    Rule_Ptr n_sum_frame;
 
     Rule_Ptr c_and;
     Rule_Ptr c_or;
@@ -176,6 +182,9 @@ public:
     void set_generate_top_concept(bool enable);
     void set_generate_concept_distance_numerical(bool enable);
     void set_generate_count_numerical(bool enable);
+    void set_generate_minimum_numerical(bool enable);
+    void set_generate_maximum_numerical(bool enable);
+    void set_generate_sum_frame_numerical(bool enable);
     void set_generate_and_role(bool enable);
     void set_generate_compose_role(bool enable);
     void set_generate_diff_role(bool enable);

@@ -39,6 +39,7 @@ namespace dlplan::core::parser
     struct IntegerClass;
     struct PositionClass;
     struct ConceptOrRoleClass;
+    struct FrameUnaryOrBinaryClass;
     struct EmptyBooleanClass;
     struct InclusionBooleanClass;
     struct NullaryBooleanClass;
@@ -60,6 +61,9 @@ namespace dlplan::core::parser
     struct RoleDistanceNumericalClass;
     struct SumConceptDistanceNumericalClass;
     struct SumRoleDistanceNumericalClass;
+    struct MinimumNumericalClass;
+    struct MaximumNumericalClass;
+    struct SumFrameNumericalClass;
     struct AndRoleClass;
     struct ComposeRoleClass;
     struct DiffRoleClass;
@@ -101,6 +105,9 @@ namespace dlplan::core::parser
 
     x3::rule<ConceptOrRoleClass, ast::ConceptOrRole> const
         concept_or_role = "concept_or_role";
+
+    x3::rule<FrameUnaryOrBinaryClass, ast::FrameUnaryOrBinary> const
+        frame_unary_or_binary = "frame_unary_or_binary";
 
     x3::rule<EmptyBooleanClass, ast::EmptyBoolean> const
         empty_boolean = "empty_boolean";
@@ -164,6 +171,15 @@ namespace dlplan::core::parser
 
     x3::rule<SumRoleDistanceNumericalClass, ast::SumRoleDistanceNumerical> const
         sum_role_distance_numerical = "sum_role_distance_numerical";
+
+    x3::rule<MinimumNumericalClass, ast::MinimumNumerical> const
+        minimum_numerical = "minimum_numerical";
+
+    x3::rule<MaximumNumericalClass, ast::MaximumNumerical> const
+        maximum_numerical = "maximum_numerical";
+
+    x3::rule<SumFrameNumericalClass, ast::SumFrameNumerical> const
+        sum_frame_numerical = "sum_frame_numerical";
 
     x3::rule<AndRoleClass, ast::AndRole> const
         and_role = "and_role";
@@ -302,6 +318,12 @@ namespace dlplan::core::parser
 
     const auto sum_role_distance_numerical_def = lit("n_sum_role_distance") > lit('(') > role > lit(',') > role > lit(',') > role > lit(')');
 
+    const auto minimum_numerical_def = lit("n_minimum") > lit('(') > frame_unary_or_binary > lit(')');
+
+    const auto maximum_numerical_def = lit("n_maximum") > lit('(') > frame_unary_or_binary > lit(')');
+
+    const auto sum_frame_numerical_def = lit("n_sum_frame") > lit('(') > frame_unary_or_binary > lit(')');
+
     const auto and_role_def = lit("r_and") > lit('(') > role > lit(',') > role > lit(')');
 
     const auto compose_role_def = lit("r_compose") > lit('(') > role > lit(',') > role > lit(')');
@@ -340,7 +362,7 @@ namespace dlplan::core::parser
     const auto concept__def = primitive_concept | all_concept | and_concept | bot_concept | diff_concept | equal_concept | not_concept | one_of_concept | or_concept | projection_concept | some_concept | subset_concept | top_concept;
     const auto concept_root_def = eps > concept_;
 
-    const auto numerical_def = concept_distance_numerical | count_numerical | role_distance_numerical | sum_concept_distance_numerical | sum_role_distance_numerical;
+    const auto numerical_def = concept_distance_numerical | count_numerical | role_distance_numerical | sum_concept_distance_numerical | sum_role_distance_numerical | minimum_numerical | maximum_numerical | sum_frame_numerical;
     const auto numerical_root_def = eps > numerical;
 
     // Note: non recursive comes first, i.e., primitive_role
@@ -355,6 +377,8 @@ namespace dlplan::core::parser
     const auto frame_binary_def = primitive_frame_binary;
     const auto frame_binary_root_def = eps > frame_binary;
 
+    const auto frame_unary_or_binary_def = frame_unary | frame_binary;
+
     const auto element_def = boolean | concept_ | numerical | role | frame_unary | frame_binary;
     const auto element_root_def = eps > element;
 
@@ -368,10 +392,10 @@ namespace dlplan::core::parser
         frame_unary, frame_unary_root,
         frame_binary, frame_binary_root,
         element, element_root,
-        concept_or_role,
+        concept_or_role, frame_unary_or_binary,
         empty_boolean, inclusion_boolean, nullary_boolean,
         all_concept, and_concept, bot_concept, diff_concept, equal_concept, not_concept, one_of_concept, or_concept, primitive_concept, projection_concept, some_concept, subset_concept, top_concept,
-        concept_distance_numerical, count_numerical, role_distance_numerical, sum_concept_distance_numerical, sum_role_distance_numerical,
+        concept_distance_numerical, count_numerical, role_distance_numerical, sum_concept_distance_numerical, sum_role_distance_numerical, minimum_numerical, maximum_numerical, sum_frame_numerical,
         and_role, compose_role, diff_role, identity_role, inverse_role, not_role, or_role, primitive_role, restrict_role, til_c_role, top_role, transitive_closure_role, transitive_reflexive_closure_role,
         primitive_frame_unary, primitive_frame_binary)
 
@@ -405,6 +429,9 @@ namespace dlplan::core::parser
     struct CountNumericalClass : x3::annotate_on_success {};
     struct RoleDistanceNumericalClass : x3::annotate_on_success {};
     struct SumConceptDistanceNumericalClass : x3::annotate_on_success {};
+    struct MinimumNumericalClass : x3::annotate_on_success {};
+    struct MaximumNumericalClass : x3::annotate_on_success {};
+    struct SumFrameNumericalClass : x3::annotate_on_success {};
     struct SumRoleDistanceNumericalClass : x3::annotate_on_success {};
     struct AndRoleClass : x3::annotate_on_success {};
     struct ComposeRoleClass : x3::annotate_on_success {};
@@ -444,6 +471,7 @@ namespace dlplan::core::parser
     struct ElementRootClass : x3::annotate_on_success, error_handler_core  {};
 
     struct ConceptOrRoleClass : x3::annotate_on_success {};
+    struct FrameUnaryOrBinaryClass : x3::annotate_on_success {};
 }
 
 namespace dlplan::core

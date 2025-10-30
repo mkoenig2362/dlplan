@@ -312,6 +312,12 @@ void init_core(py::module_ &m_core) {
         .def("make_role_distance_numerical", &SyntacticElementFactory::make_role_distance_numerical)
         .def("make_sum_concept_distance_numerical", &SyntacticElementFactory::make_sum_concept_distance_numerical)
         .def("make_sum_role_distance_numerical", &SyntacticElementFactory::make_sum_role_distance_numerical)
+        .def("make_minimum_numerical", py::overload_cast<const std::shared_ptr<const FrameUnary>&>(&SyntacticElementFactory::make_minimum_numerical))
+        .def("make_minimum_numerical", py::overload_cast<const std::shared_ptr<const FrameBinary>&>(&SyntacticElementFactory::make_minimum_numerical))
+        .def("make_maximum_numerical", py::overload_cast<const std::shared_ptr<const FrameUnary>&>(&SyntacticElementFactory::make_maximum_numerical))
+        .def("make_maximum_numerical", py::overload_cast<const std::shared_ptr<const FrameBinary>&>(&SyntacticElementFactory::make_maximum_numerical))
+        .def("make_sum_frame_numerical", py::overload_cast<const std::shared_ptr<const FrameUnary>&>(&SyntacticElementFactory::make_sum_frame_numerical))
+        .def("make_sum_frame_numerical", py::overload_cast<const std::shared_ptr<const FrameBinary>&>(&SyntacticElementFactory::make_sum_frame_numerical))
 
         .def("make_and_role", &SyntacticElementFactory::make_and_role)
         .def("make_compose_role", &SyntacticElementFactory::make_compose_role)

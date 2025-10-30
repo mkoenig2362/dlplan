@@ -10,6 +10,7 @@ const int SCORE_QUADRATIC = SCORE_LINEAR * SCORE_LINEAR;
 const int SCORE_QUBIC = SCORE_LINEAR * SCORE_LINEAR * SCORE_LINEAR;
 
 const int INF = std::numeric_limits<int>::max();
+const double INF_DOUBLE = std::numeric_limits<double>::max();
 
 namespace dlplan::core::utils {
 

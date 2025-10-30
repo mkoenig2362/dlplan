@@ -40,6 +40,9 @@ namespace dlplan::core::ast
     struct RoleDistanceNumerical;
     struct SumConceptDistanceNumerical;
     struct SumRoleDistanceNumerical;
+    struct MinimumNumerical;
+    struct MaximumNumerical;
+    struct SumFrameNumerical;
     struct AndRole;
     struct ComposeRole;
     struct DiffRole;
@@ -113,7 +116,10 @@ namespace dlplan::core::ast
         x3::forward_ast<CountNumerical>,
         x3::forward_ast<RoleDistanceNumerical>,
         x3::forward_ast<SumConceptDistanceNumerical>,
-        x3::forward_ast<SumRoleDistanceNumerical>> {
+        x3::forward_ast<SumRoleDistanceNumerical>,
+        x3::forward_ast<MinimumNumerical>,
+        x3::forward_ast<MaximumNumerical>,
+        x3::forward_ast<SumFrameNumerical>> {
         using base_type::base_type;
         using base_type::operator=;
     };
@@ -164,6 +170,13 @@ namespace dlplan::core::ast
     struct ConceptOrRole : x3::position_tagged, x3::variant<
         x3::forward_ast<Concept>,
         x3::forward_ast<Role>> {
+        using base_type::base_type;
+        using base_type::operator=;
+    };
+
+    struct FrameUnaryOrBinary : x3::position_tagged, x3::variant<
+        x3::forward_ast<FrameUnary>,
+        x3::forward_ast<FrameBinary>> {
         using base_type::base_type;
         using base_type::operator=;
     };
@@ -266,6 +279,18 @@ namespace dlplan::core::ast
         Role role_left;
         Role role;
         Role role_right;
+    };
+
+    struct MinimumNumerical : x3::position_tagged {
+        FrameUnaryOrBinary element;
+    };
+
+    struct MaximumNumerical : x3::position_tagged {
+        FrameUnaryOrBinary element;
+    };
+
+    struct SumFrameNumerical : x3::position_tagged {
+        FrameUnaryOrBinary element;
     };
 
     struct AndRole : x3::position_tagged {

@@ -78,42 +78,6 @@ public:
     }
 };
 
-class FrameUnaryVisitor {
-private:
-    const error_handler_type& error_handler;
-    SyntacticElementFactory& context;
-
-public:
-    FrameUnaryVisitor(
-        const error_handler_type& error_handler, SyntacticElementFactory& context)
-        : error_handler(error_handler), context(context) { }
-
-    std::shared_ptr<const core::FrameUnary> result;
-
-    template<typename Node>
-    void operator()(const Node& node) {
-        result = parse(node, error_handler, context);
-    }
-};
-
-class FrameBinaryVisitor {
-private:
-    const error_handler_type& error_handler;
-    SyntacticElementFactory& context;
-
-public:
-    FrameBinaryVisitor(
-        const error_handler_type& error_handler, SyntacticElementFactory& context)
-        : error_handler(error_handler), context(context) { }
-
-    std::shared_ptr<const core::FrameBinary> result;
-
-    template<typename Node>
-    void operator()(const Node& node) {
-        result = parse(node, error_handler, context);
-    }
-};
-
 class ConceptInnerVisitor {
 public:
     ConceptInnerVisitor() { }
@@ -150,6 +114,85 @@ public:
         : error_handler(error_handler), context(context) { }
 
     boost::variant<std::shared_ptr<const core::Concept>, std::shared_ptr<const core::Role>> result;
+
+    template<typename Node>
+    void operator()(const Node& node) {
+        result = parse(node, error_handler, context);
+    }
+};
+
+class FrameUnaryVisitor {
+private:
+    const error_handler_type& error_handler;
+    SyntacticElementFactory& context;
+
+public:
+    FrameUnaryVisitor(
+        const error_handler_type& error_handler, SyntacticElementFactory& context)
+        : error_handler(error_handler), context(context) { }
+
+    std::shared_ptr<const core::FrameUnary> result;
+
+    template<typename Node>
+    void operator()(const Node& node) {
+        result = parse(node, error_handler, context);
+    }
+};
+
+class FrameBinaryVisitor {
+private:
+    const error_handler_type& error_handler;
+    SyntacticElementFactory& context;
+
+public:
+    FrameBinaryVisitor(
+        const error_handler_type& error_handler, SyntacticElementFactory& context)
+        : error_handler(error_handler), context(context) { }
+
+    std::shared_ptr<const core::FrameBinary> result;
+
+    template<typename Node>
+    void operator()(const Node& node) {
+        result = parse(node, error_handler, context);
+    }
+};
+
+class FrameUnaryInnerVisitor {
+public:
+    FrameUnaryInnerVisitor() { }
+
+    std::shared_ptr<const core::FrameUnary> result;
+
+    void operator()(const std::shared_ptr<const core::FrameBinary>&) { }
+
+    void operator()(const std::shared_ptr<const core::FrameUnary>& frame_unary) {
+        result = frame_unary;
+    }
+};
+
+class FrameBinaryInnerVisitor {
+public:
+    FrameBinaryInnerVisitor() { }
+
+    std::shared_ptr<const core::FrameBinary> result;
+
+    void operator()(const std::shared_ptr<const core::FrameBinary>& frame_binary) {
+        result = frame_binary;
+    }
+
+    void operator()(const std::shared_ptr<const core::FrameUnary>&) { }
+};
+
+class FrameUnaryOrBinaryVisitor {
+private:
+    const error_handler_type& error_handler;
+    SyntacticElementFactory& context;
+
+public:
+    FrameUnaryOrBinaryVisitor(const error_handler_type& error_handler, SyntacticElementFactory& context)
+        : error_handler(error_handler), context(context) { }
+
+    boost::variant<std::shared_ptr<const core::FrameUnary>, std::shared_ptr<const core::FrameBinary>> result;
 
     template<typename Node>
     void operator()(const Node& node) {
@@ -381,6 +424,45 @@ parse(const ast::SumRoleDistanceNumerical& node, const error_handler_type& error
         parse(node.role_right, error_handler, context));
 }
 
+std::shared_ptr<const core::Numerical>
+parse(const ast::MinimumNumerical& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+    auto frame_unary_or_binary = parse(node.element, error_handler, context);
+    FrameUnaryInnerVisitor frame_unary_visitor;
+    boost::apply_visitor(frame_unary_visitor, frame_unary_or_binary);
+    if (frame_unary_visitor.result != nullptr) return context.make_minimum_numerical(frame_unary_visitor.result);
+    FrameBinaryInnerVisitor frame_binary_visitor;
+    boost::apply_visitor(frame_binary_visitor, frame_unary_or_binary);
+    if (frame_binary_visitor.result != nullptr) return context.make_minimum_numerical(frame_binary_visitor.result);
+    error_handler(node, "expected two concepts or two roles");
+    throw std::runtime_error("Failed parse.");
+}
+
+std::shared_ptr<const core::Numerical>
+parse(const ast::MaximumNumerical& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+    auto frame_unary_or_binary = parse(node.element, error_handler, context);
+    FrameUnaryInnerVisitor frame_unary_visitor;
+    boost::apply_visitor(frame_unary_visitor, frame_unary_or_binary);
+    if (frame_unary_visitor.result != nullptr) return context.make_maximum_numerical(frame_unary_visitor.result);
+    FrameBinaryInnerVisitor frame_binary_visitor;
+    boost::apply_visitor(frame_binary_visitor, frame_unary_or_binary);
+    if (frame_binary_visitor.result != nullptr) return context.make_maximum_numerical(frame_binary_visitor.result);
+    error_handler(node, "expected two concepts or two roles");
+    throw std::runtime_error("Failed parse.");
+}
+
+std::shared_ptr<const core::Numerical>
+parse(const ast::SumFrameNumerical& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+    auto frame_unary_or_binary = parse(node.element, error_handler, context);
+    FrameUnaryInnerVisitor frame_unary_visitor;
+    boost::apply_visitor(frame_unary_visitor, frame_unary_or_binary);
+    if (frame_unary_visitor.result != nullptr) return context.make_sum_frame_numerical(frame_unary_visitor.result);
+    FrameBinaryInnerVisitor frame_binary_visitor;
+    boost::apply_visitor(frame_binary_visitor, frame_unary_or_binary);
+    if (frame_binary_visitor.result != nullptr) return context.make_sum_frame_numerical(frame_binary_visitor.result);
+    error_handler(node, "expected two concepts or two roles");
+    throw std::runtime_error("Failed parse.");
+}
+
 std::shared_ptr<const core::Role>
 parse(const ast::AndRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_and_role(
@@ -499,6 +581,13 @@ parse(const ast::Concept& node, const error_handler_type& error_handler, Syntact
 std::shared_ptr<const core::Role>
 parse(const ast::Role& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     RoleVisitor visitor(error_handler, context);
+    boost::apply_visitor(visitor, node);
+    return visitor.result;
+}
+
+boost::variant<std::shared_ptr<const core::FrameUnary>, std::shared_ptr<const core::FrameBinary>>
+parse(const ast::FrameUnaryOrBinary& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+    FrameUnaryOrBinaryVisitor visitor(error_handler, context);
     boost::apply_visitor(visitor, node);
     return visitor.result;
 }

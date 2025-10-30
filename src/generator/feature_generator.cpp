@@ -27,6 +27,9 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
       n_count(std::make_shared<rules::CountNumerical>()),
       b_inclusion(std::make_shared<rules::InclusionBoolean>()),
       n_concept_distance(std::make_shared<rules::ConceptDistanceNumerical>()),
+      n_minimum(std::make_shared<rules::MinimumNumerical>()),
+      n_maximum(std::make_shared<rules::MaximumNumerical>()),
+      n_sum_frame(std::make_shared<rules::SumFrameNumerical>()),
       c_and(std::make_shared<rules::AndConcept>()),
       c_or(std::make_shared<rules::OrConcept>()),
       c_not(std::make_shared<rules::NotConcept>()),
@@ -86,6 +89,9 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
 
     m_numerical_inductive_rules.emplace_back(n_count);
     m_numerical_inductive_rules.emplace_back(n_concept_distance);
+    m_numerical_inductive_rules.emplace_back(n_minimum);
+    m_numerical_inductive_rules.emplace_back(n_maximum);
+    m_numerical_inductive_rules.emplace_back(n_sum_frame);
 }
 
 FeatureGeneratorImpl::FeatureGeneratorImpl(const FeatureGeneratorImpl& other) = default;
@@ -145,7 +151,6 @@ GeneratedFeatures FeatureGeneratorImpl::generate(
 
     // Restore previous sigint handler
     std::signal(SIGINT, pre_sigint_handler);
-
     return data.m_generated_features;
 }
 
@@ -208,12 +213,11 @@ void FeatureGeneratorImpl::generate_inductively(
             }
         }
         if (target_complexity <= count_numerical_complexity_limit) {
-            if (data.reached_resource_limit()) break;
-            n_count->generate(states, target_complexity, data, caches);
-        }
-        if (target_complexity <= distance_numerical_complexity_limit) {
-            if (data.reached_resource_limit()) break;
-            n_concept_distance->generate(states, target_complexity, data, caches);
+           if (data.reached_resource_limit()) break;
+            for (const auto& rule : m_numerical_inductive_rules) {
+                if (data.reached_resource_limit()) break;
+                rule->generate(states, target_complexity, data, caches);
+            }
         }
         utils::g_log << "Complexity " << target_complexity << ":" << std::endl;
         data.print_statistics();
@@ -306,6 +310,18 @@ void FeatureGeneratorImpl::set_generate_concept_distance_numerical(bool enable) 
 
 void FeatureGeneratorImpl::set_generate_count_numerical(bool enable) {
     n_count->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_minimum_numerical(bool enable) {
+    n_minimum->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_maximum_numerical(bool enable) {
+    n_maximum->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_sum_frame_numerical(bool enable) {
+    n_sum_frame->set_enabled(enable);
 }
 
 void FeatureGeneratorImpl::set_generate_and_role(bool enable) {

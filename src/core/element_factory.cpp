@@ -341,6 +341,30 @@ std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::make_sum_role_dist
     return m_cache.get_or_create<SumRoleDistanceNumerical>(m_vocabulary_info, role_from, role, role_to).object;
 }
 
+std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::make_minimum_numerical(const std::shared_ptr<const FrameUnary>& frame_unary) {
+    return m_cache.get_or_create<MinimumNumerical<FrameUnary>>(m_vocabulary_info, frame_unary).object;
+}
+
+std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::make_minimum_numerical(const std::shared_ptr<const FrameBinary>& frame_binary) {
+    return m_cache.get_or_create<MinimumNumerical<FrameBinary>>(m_vocabulary_info, frame_binary).object;
+}
+
+std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::make_maximum_numerical(const std::shared_ptr<const FrameUnary>& frame_unary) {
+    return m_cache.get_or_create<MaximumNumerical<FrameUnary>>(m_vocabulary_info, frame_unary).object;
+}
+
+std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::make_maximum_numerical(const std::shared_ptr<const FrameBinary>& frame_binary) {
+    return m_cache.get_or_create<MaximumNumerical<FrameBinary>>(m_vocabulary_info, frame_binary).object;
+}
+
+std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::make_sum_frame_numerical(const std::shared_ptr<const FrameUnary>& frame_unary) {
+    return m_cache.get_or_create<SumFrameNumerical<FrameUnary>>(m_vocabulary_info, frame_unary).object;
+}
+
+std::shared_ptr<const Numerical> SyntacticElementFactoryImpl::make_sum_frame_numerical(const std::shared_ptr<const FrameBinary>& frame_binary) {
+    return m_cache.get_or_create<SumFrameNumerical<FrameBinary>>(m_vocabulary_info, frame_binary).object;
+}
+
 std::shared_ptr<const Role> SyntacticElementFactoryImpl::make_and_role(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right) {
     return m_cache.get_or_create<AndRole>(m_vocabulary_info, role_left, role_right).object;
 }
@@ -433,6 +457,12 @@ namespace dlplan {
         , core::RoleDistanceNumerical
         , core::SumConceptDistanceNumerical
         , core::SumRoleDistanceNumerical
+        , core::MinimumNumerical<core::FrameUnary>
+        , core::MinimumNumerical<core::FrameBinary>
+        , core::MaximumNumerical<core::FrameUnary>
+        , core::MaximumNumerical<core::FrameBinary>
+        , core::SumFrameNumerical<core::FrameUnary>
+        , core::SumFrameNumerical<core::FrameBinary>
         , core::AndRole
         , core::ComposeRole
         , core::DiffRole
@@ -447,5 +477,7 @@ namespace dlplan {
         , core::TransitiveClosureRole
         , core::TransitiveReflexiveClosureRole
         , core::PrimitiveFrameUnary
-        , core::PrimitiveFrameBinary>;
+        , core::PrimitiveFrameBinary
+        , core::MinimumNumerical<core::FrameUnary>
+        , core::MinimumNumerical<core::FrameBinary>>;
 }

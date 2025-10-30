@@ -42,7 +42,7 @@ using RoleDenotations = std::vector<std::shared_ptr<const RoleDenotation>>;
 using FrameUnaryDenotations = std::vector<std::shared_ptr<const FrameUnaryDenotation>>;
 using FrameBinaryDenotations = std::vector<std::shared_ptr<const FrameBinaryDenotation>>;
 using BooleanDenotations = std::vector<bool>;
-using NumericalDenotations = std::vector<int>;
+using NumericalDenotations = std::vector<double>;
 
 using States = std::vector<State>;
 
@@ -360,7 +360,7 @@ public:
         FrameUnaryDenotation,
         FrameBinaryDenotation,
         bool,
-        int,
+        double,
         ConceptDenotations,
         RoleDenotations,
         FrameUnaryDenotations,
@@ -852,7 +852,7 @@ using Boolean = ElementLight<bool, BooleanDenotations>;
 
 /// @brief Represents a numerical element that evaluates to an natural number
 ///        on a given state. It can also make use of a cache during evaluation.
-using Numerical = ElementLight<int, NumericalDenotations>;
+using Numerical = ElementLight<double, NumericalDenotations>;
 
 
 /// @brief Provides functionality for the syntactically unique creation of elements.
@@ -956,6 +956,12 @@ public:
     std::shared_ptr<const Numerical> make_role_distance_numerical(const std::shared_ptr<const Role>& role_from, const std::shared_ptr<const Role>& role, const std::shared_ptr<const Role>& role_to);
     std::shared_ptr<const Numerical> make_sum_concept_distance_numerical(const std::shared_ptr<const Concept>& concept_from, const std::shared_ptr<const Role>& role, const std::shared_ptr<const Concept>& concept_to);
     std::shared_ptr<const Numerical> make_sum_role_distance_numerical(const std::shared_ptr<const Role>& role_from, const std::shared_ptr<const Role>& role, const std::shared_ptr<const Role>& role_to);
+    std::shared_ptr<const Numerical> make_minimum_numerical(const std::shared_ptr<const FrameUnary>& frame_unary);
+    std::shared_ptr<const Numerical> make_minimum_numerical(const std::shared_ptr<const FrameBinary>& frame_binary);
+    std::shared_ptr<const Numerical> make_maximum_numerical(const std::shared_ptr<const FrameUnary>& frame_unary);
+    std::shared_ptr<const Numerical> make_maximum_numerical(const std::shared_ptr<const FrameBinary>& frame_binary);
+    std::shared_ptr<const Numerical> make_sum_frame_numerical(const std::shared_ptr<const FrameUnary>& frame_unary);
+    std::shared_ptr<const Numerical> make_sum_frame_numerical(const std::shared_ptr<const FrameBinary>& frame_binary);
 
     std::shared_ptr<const Role> make_and_role(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right);
     std::shared_ptr<const Role> make_compose_role(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right);

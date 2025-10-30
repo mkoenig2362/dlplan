@@ -19,19 +19,19 @@ void RoleDistanceNumerical::compute_result(const RoleDenotation& role_from_denot
     }
 }
 
-int RoleDistanceNumerical::evaluate_impl(const State& state, DenotationsCaches& caches) const {
+double RoleDistanceNumerical::evaluate_impl(const State& state, DenotationsCaches& caches) const {
     auto role_from_denot = m_role_from->evaluate(state, caches);
     if (role_from_denot->empty()) {
-        return INF;
+        return INF_DOUBLE;
     }
     auto role_to_denot = m_role_to->evaluate(state, caches);
     if (role_to_denot->empty()) {
-        return INF;
+        return INF_DOUBLE;
     }
     auto role_denot = m_role->evaluate(state, caches);
     int denotation;
     compute_result(*role_from_denot, *role_denot, *role_to_denot, denotation);
-    return denotation;
+    return (double)denotation;
 }
 
 NumericalDenotations RoleDistanceNumerical::evaluate_impl(const States& states, DenotationsCaches& caches) const {
@@ -42,11 +42,11 @@ NumericalDenotations RoleDistanceNumerical::evaluate_impl(const States& states, 
     auto role_to_denots = m_role_to->evaluate(states, caches);
     for (size_t i = 0; i < states.size(); ++i) {
         if ((*role_from_denots)[i]->empty()) {
-            denotations.push_back(INF);
+            denotations.push_back(INF_DOUBLE);
             continue;
         }
         if ((*role_to_denots)[i]->empty()) {
-            denotations.push_back(INF);
+            denotations.push_back(INF_DOUBLE);
             continue;
         }
         int denotation;
@@ -55,7 +55,7 @@ NumericalDenotations RoleDistanceNumerical::evaluate_impl(const States& states, 
             *(*role_denots)[i],
             *(*role_to_denots)[i],
             denotation);
-        denotations.push_back(denotation);
+        denotations.push_back((double)denotation);
     }
     return denotations;
 }
@@ -79,19 +79,19 @@ size_t RoleDistanceNumerical::hash_impl() const {
     return hash_combine(m_is_static, m_role_from, m_role, m_role_to);
 }
 
-int RoleDistanceNumerical::evaluate(const State& state) const {
+double RoleDistanceNumerical::evaluate(const State& state) const {
     auto role_from_denot = m_role_from->evaluate(state);
     if (role_from_denot.empty()) {
-        return INF;
+        return INF_DOUBLE;
     }
     auto role_to_denot = m_role_to->evaluate(state);
     if (role_to_denot.empty()) {
-        return INF;
+        return INF_DOUBLE;
     }
     auto role_denot = m_role->evaluate(state);
     int denotation;
     compute_result(role_from_denot, role_denot, role_to_denot, denotation);
-    return denotation;
+    return (double)denotation;
 }
 
 int RoleDistanceNumerical::compute_complexity_impl() const {

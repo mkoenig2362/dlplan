@@ -68,6 +68,9 @@ public:
     void set_generate_top_concept(bool enable);
     void set_generate_concept_distance_numerical(bool enable);
     void set_generate_count_numerical(bool enable);
+    void set_generate_minimum_numerical(bool enable);
+    void set_generate_maximum_numerical(bool enable);
+    void set_generate_sum_frame_numerical(bool enable);
     void set_generate_and_role(bool enable);
     void set_generate_compose_role(bool enable);
     void set_generate_diff_role(bool enable);
@@ -116,6 +119,9 @@ extern GeneratedFeatures generate_features(
     bool generate_top_concept=true,
     bool generate_concept_distance_numerical=true,
     bool generate_count_numerical=true,
+    bool generate_minimum_numerical=true,
+    bool generate_maximum_numerical=true,
+    bool generate_sum_frame_numerical=true,
     bool generate_and_role=true,
     bool generate_compose_role=false,
     bool generate_diff_role=false,

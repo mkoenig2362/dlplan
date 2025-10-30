@@ -27,6 +27,7 @@ namespace dlplan::core
             id_map["FrameBinary"] = "Frame Binary";
             id_map["element"] = "Element";
             id_map["concept_or_role"] = "Concept or Role";
+            id_map["frame_unary_or_binary"] = "Frame Unary or Binary";
         }
     };
 }

@@ -10,17 +10,17 @@ void SumConceptDistanceNumerical::compute_result(const ConceptDenotation& concep
     }
 }
 
-int SumConceptDistanceNumerical::evaluate_impl(const State& state, DenotationsCaches& caches) const {
+double SumConceptDistanceNumerical::evaluate_impl(const State& state, DenotationsCaches& caches) const {
     auto concept_from_denot = m_concept_from->evaluate(state, caches);
     if (concept_from_denot->empty()) {
-        return INF;
+        return INF_DOUBLE;
     }
     auto concept_to_denot = m_concept_to->evaluate(state, caches);
     if (concept_to_denot->empty()) {
-        return INF;
+        return INF_DOUBLE;
     }
     if (concept_from_denot->intersects(*concept_to_denot)) {
-        return 0;
+        return 0.0;
     }
     auto role_denot = m_role->evaluate(state, caches);
     int denotation;
@@ -28,7 +28,7 @@ int SumConceptDistanceNumerical::evaluate_impl(const State& state, DenotationsCa
         *concept_from_denot,
         *role_denot,
         *concept_to_denot, denotation);
-    return denotation;
+    return (double)denotation;
 }
 
 NumericalDenotations SumConceptDistanceNumerical::evaluate_impl(const States& states, DenotationsCaches& caches) const {
@@ -39,11 +39,11 @@ NumericalDenotations SumConceptDistanceNumerical::evaluate_impl(const States& st
     auto concept_to_denots = m_concept_to->evaluate(states, caches);
     for (size_t i = 0; i < states.size(); ++i) {
         if ((*concept_from_denots)[i]->empty()) {
-            denotations.push_back(INF);
+            denotations.push_back(INF_DOUBLE);
             continue;
         }
         if ((*concept_to_denots)[i]->empty()) {
-            denotations.push_back(INF);
+            denotations.push_back(INF_DOUBLE);
             continue;
         }
         int denotation;
@@ -52,7 +52,7 @@ NumericalDenotations SumConceptDistanceNumerical::evaluate_impl(const States& st
             *(*role_denots)[i],
             *(*concept_to_denots)[i],
             denotation);
-        denotations.push_back(denotation);
+        denotations.push_back((double)denotation);
     }
     return denotations;
 }
@@ -76,19 +76,19 @@ size_t SumConceptDistanceNumerical::hash_impl() const {
     return hash_combine(m_is_static, m_concept_from, m_role, m_concept_to);
 }
 
-int SumConceptDistanceNumerical::evaluate(const State& state) const {
+double SumConceptDistanceNumerical::evaluate(const State& state) const {
     auto concept_from_denot = m_concept_from->evaluate(state);
     if (concept_from_denot.empty()) {
-        return INF;
+        return INF_DOUBLE;
     }
     auto concept_to_denot = m_concept_to->evaluate(state);
     if (concept_to_denot.empty()) {
-        return INF;
+        return INF_DOUBLE;
     }
     auto role_denot = m_role->evaluate(state);
     int denotation;
     compute_result(concept_from_denot, role_denot, concept_to_denot, denotation);
-    return denotation;
+    return (double)denotation;
 }
 
 int SumConceptDistanceNumerical::compute_complexity_impl() const {

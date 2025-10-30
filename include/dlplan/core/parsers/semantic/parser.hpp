@@ -66,6 +66,12 @@ extern std::shared_ptr<const core::Numerical> parse(const ast::SumConceptDistanc
 
 extern std::shared_ptr<const core::Numerical> parse(const ast::SumRoleDistanceNumerical& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
 
+extern std::shared_ptr<const core::Numerical> parse(const ast::MinimumNumerical& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
+
+extern std::shared_ptr<const core::Numerical> parse(const ast::MaximumNumerical& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
+
+extern std::shared_ptr<const core::Numerical> parse(const ast::SumFrameNumerical& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
+
 extern std::shared_ptr<const core::Role> parse(const ast::AndRole& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
 
 extern std::shared_ptr<const core::Role> parse(const ast::ComposeRole& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
@@ -97,6 +103,8 @@ extern boost::variant<std::shared_ptr<const core::Concept>, std::shared_ptr<cons
 extern std::shared_ptr<const core::FrameUnary> parse(const ast::PrimitiveFrameUnary& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
 
 extern std::shared_ptr<const core::FrameBinary> parse(const ast::PrimitiveFrameBinary& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
+
+extern boost::variant<std::shared_ptr<const core::FrameUnary>, std::shared_ptr<const core::FrameBinary>> parse(const ast::FrameUnaryOrBinary& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
 
 extern std::shared_ptr<const Boolean> parse(const ast::Boolean& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
 

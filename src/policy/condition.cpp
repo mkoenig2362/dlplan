@@ -81,13 +81,13 @@ bool GreaterNumericalCondition::are_equal_impl(const BaseCondition& other) const
 }
 
 bool GreaterNumericalCondition::evaluate(const core::State& source_state) const {
-    int eval = m_named_element->get_element()->evaluate(source_state);
+    double eval = m_named_element->get_element()->evaluate(source_state);
     //if (eval == INF) return false;
     return eval > 0;
 }
 
 bool GreaterNumericalCondition::evaluate(const core::State& source_state, core::DenotationsCaches& caches) const {
-    int eval = m_named_element->get_element()->evaluate(source_state, caches);
+    double eval = m_named_element->get_element()->evaluate(source_state, caches);
     //if (eval == INF) return false;
     return eval > 0;
 }
@@ -114,13 +114,13 @@ bool EqualNumericalCondition::are_equal_impl(const BaseCondition& other) const {
 }
 
 bool EqualNumericalCondition::evaluate(const core::State& source_state) const {
-    int eval = m_named_element->get_element()->evaluate(source_state);
+    double eval = m_named_element->get_element()->evaluate(source_state);
     //if (eval == INF) return false;
     return eval == 0;
 }
 
 bool EqualNumericalCondition::evaluate(const core::State& source_state, core::DenotationsCaches& caches) const {
-    int eval = m_named_element->get_element()->evaluate(source_state, caches);
+    double eval = m_named_element->get_element()->evaluate(source_state, caches);
     //if (eval == INF) return false;
     return eval == 0;
 }
@@ -146,13 +146,13 @@ bool GreaterConceptCondition::are_equal_impl(const BaseCondition& other) const {
 }
 
 bool GreaterConceptCondition::evaluate(const core::State& source_state) const {
-    int eval = m_named_element->get_element()->evaluate(source_state).size();
+    double eval = m_named_element->get_element()->evaluate(source_state).size();
     //if (eval == INF) return false;
     return eval > 0;
 }
 
 bool GreaterConceptCondition::evaluate(const core::State& source_state, core::DenotationsCaches& caches) const {
-    int eval = m_named_element->get_element()->evaluate(source_state, caches)->size();
+    double eval = m_named_element->get_element()->evaluate(source_state, caches)->size();
     //if (eval == INF) return false;
     return eval > 0;
 }
@@ -179,13 +179,13 @@ bool EqualConceptCondition::are_equal_impl(const BaseCondition& other) const {
 }
 
 bool EqualConceptCondition::evaluate(const core::State& source_state) const {
-    int eval = m_named_element->get_element()->evaluate(source_state).size();
+    double eval = m_named_element->get_element()->evaluate(source_state).size();
     //if (eval == INF) return false;
     return eval == 0;
 }
 
 bool EqualConceptCondition::evaluate(const core::State& source_state, core::DenotationsCaches& caches) const {
-    int eval = m_named_element->get_element()->evaluate(source_state, caches)->size();
+    double eval = m_named_element->get_element()->evaluate(source_state, caches)->size();
     //if (eval == INF) return false;
     return eval == 0;
 }

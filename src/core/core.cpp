@@ -238,6 +238,30 @@ std::shared_ptr<const Numerical>SyntacticElementFactory::make_sum_role_distance_
     return m_pImpl->make_sum_role_distance_numerical(role_from, role, role_to);
 }
 
+std::shared_ptr<const Numerical>SyntacticElementFactory::make_minimum_numerical(const std::shared_ptr<const FrameUnary>& frame_unary) {
+    return m_pImpl->make_minimum_numerical(frame_unary);
+}
+
+std::shared_ptr<const Numerical>SyntacticElementFactory::make_minimum_numerical(const std::shared_ptr<const FrameBinary>& frame_binary) {
+    return m_pImpl->make_minimum_numerical(frame_binary);
+}
+
+std::shared_ptr<const Numerical>SyntacticElementFactory::make_maximum_numerical(const std::shared_ptr<const FrameUnary>& frame_unary) {
+    return m_pImpl->make_maximum_numerical(frame_unary);
+}
+
+std::shared_ptr<const Numerical>SyntacticElementFactory::make_maximum_numerical(const std::shared_ptr<const FrameBinary>& frame_binary) {
+    return m_pImpl->make_maximum_numerical(frame_binary);
+}
+
+std::shared_ptr<const Numerical>SyntacticElementFactory::make_sum_frame_numerical(const std::shared_ptr<const FrameUnary>& frame_unary) {
+    return m_pImpl->make_sum_frame_numerical(frame_unary);
+}
+
+std::shared_ptr<const Numerical>SyntacticElementFactory::make_sum_frame_numerical(const std::shared_ptr<const FrameBinary>& frame_binary) {
+    return m_pImpl->make_sum_frame_numerical(frame_binary);
+}
+
 std::shared_ptr<const Role>SyntacticElementFactory::make_and_role(const std::shared_ptr<const Role>& role_left, const std::shared_ptr<const Role>& role_right) {
     return m_pImpl->make_and_role(role_left, role_right);
 }
@@ -305,7 +329,7 @@ template class Element<RoleDenotation, RoleDenotations>;
 template class Element<FrameUnaryDenotation, FrameUnaryDenotations>;
 template class Element<FrameBinaryDenotation, FrameBinaryDenotations>;
 template class ElementLight<bool, BooleanDenotations>;
-template class ElementLight<int, NumericalDenotations>;
+template class ElementLight<double, NumericalDenotations>;
 }
 
 namespace dlplan {
@@ -315,7 +339,7 @@ template class SharedObjectCache<core::DenotationsCacheKey,
     core::FrameUnaryDenotation,
     core::FrameBinaryDenotation,
     bool,
-    int,
+    double,
     core::ConceptDenotations,
     core::RoleDenotations,
     core::FrameUnaryDenotations,

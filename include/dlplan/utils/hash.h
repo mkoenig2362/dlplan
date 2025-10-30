@@ -97,6 +97,12 @@ namespace std {
             return dlplan::hash_vector(data);
         }
     };
+    template<>
+        struct hash<std::vector<double>> {
+        size_t operator()(const std::vector<double>& data) const {
+            return dlplan::hash_vector(data);
+        }
+    };
 }
 
 #endif
