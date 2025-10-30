@@ -14,11 +14,12 @@ namespace dlplan::core {
 Atom::Atom(
     AtomIndex index,
     const std::string& name,
-    PredicateIndex predicate_idx,
-    const ObjectIndices &object_idxs,
+    SymbolKind    kind,   //Predicate or Function?
+    SymbolIndex   symbol_index, //replaces PredicateIndex
+    const ObjectIndices &m_object_indices,
     bool is_static)
-    : Base<Atom>(index), m_name(name),
-      m_predicate_index(predicate_idx), m_object_indices(object_idxs), m_is_static(is_static) {
+    : Base<Atom>(index), m_name(name), m_kind(kind),
+      m_symbol_index(symbol_index), m_object_indices(m_object_indices), m_is_static(is_static) {
 }
 
 Atom::Atom(const Atom& other) = default;
@@ -40,7 +41,8 @@ void Atom::str_impl(std::stringstream& out) const {
     out << "Atom("
        << "index=" << m_index << ", "
        << "name=" << m_name << ", "
-       << "predicate_index=" << m_predicate_index << ", "
+       << "kind=" << m_kind << ", "
+       << "symbol_index=" << m_symbol_index << ", "
        << "object_indices=" << m_object_indices << ", "
        << "is_static=" << m_is_static
        << ")";
@@ -58,7 +60,12 @@ const std::string& Atom::get_name() const {
 }
 
 PredicateIndex Atom::get_predicate_index() const {
-    return m_predicate_index;
+    std::cout << "deprecated";
+    return m_symbol_index;
+} //deprecated
+
+SymbolIndex Atom::get_symbol_index() const {
+    return m_symbol_index;
 }
 
 const ObjectIndices& Atom::get_object_indices() const {

@@ -26,6 +26,7 @@ class DenotationsCaches;
 struct DenotationsCacheKey;
 class Constant;
 class Predicate;
+class Function;
 class VocabularyInfo;
 class Object;
 class Atom;
@@ -44,6 +45,8 @@ using States = std::vector<State>;
 using ConstantIndex = int;
 
 using PredicateIndex = int;
+using FunctionIndex = int;
+using SymbolIndex = int;
 
 using ObjectIndex = int;
 using ObjectIndices = std::vector<ObjectIndex>;
@@ -69,6 +72,10 @@ namespace std {
     template<>
     struct hash<dlplan::core::Predicate> {
         std::size_t operator()(const dlplan::core::Predicate& predicate) const;
+    };
+    template<>
+    struct hash<dlplan::core::Function> {
+        std::size_t operator()(const dlplan::core::Function& function) const;
     };
     template<>
     struct hash<dlplan::core::Object> {
@@ -312,6 +319,33 @@ public:
     bool is_static() const;
 };
 
+/// @brief Encapsulates the representation of a function and provides
+///        functionality to access it.
+class Function : public Base<Function> {
+private:
+    std::string m_name;
+    int m_arity;
+    bool m_is_static;
+
+    Function(FunctionIndex index, const std::string& name, int arity, bool is_static=false);
+
+    friend class VocabularyInfo;
+
+public:
+    Function(const Function& other);
+    Function& operator=(const Function& other);
+    Function(Function&& other);
+    Function& operator=(Function&& other);
+    ~Function();
+
+    bool are_equal_impl(const Function& other) const;
+    void str_impl(std::stringstream& out) const;
+    size_t hash_impl() const;
+
+    const std::string& get_name() const;
+    int get_arity() const;
+    bool is_static() const;
+};
 
 /// @brief Encapsulates domain-general data and provides functionality
 ///        to access it.
@@ -326,6 +360,9 @@ private:
     // we store static and dynamic predicates together.
     std::unordered_map<std::string, PredicateIndex> m_predicate_name_to_index;
     std::vector<Predicate> m_predicates;
+    
+    std::unordered_map<std::string, FunctionIndex> m_function_name_to_index;
+    std::vector<Function> m_functions;
 
     std::unordered_map<std::string, ConstantIndex> m_constant_name_to_index;
     std::vector<Constant> m_constants;
@@ -343,15 +380,19 @@ public:
     size_t hash_impl() const;
 
     const Predicate& add_predicate(const std::string &name, int arity, bool is_static=false);
+    const Function& add_function(const std::string &name, int arity, bool is_static=false);
     const Constant& add_constant(const std::string& name);
 
     const std::unordered_map<std::string, PredicateIndex>& get_predicates_mapping() const;
+    const std::unordered_map<std::string, FunctionIndex>& get_functions_mapping() const;
     const std::unordered_map<std::string, ConstantIndex>& get_constants_mapping() const;
 
     const std::vector<Predicate>& get_predicates() const;
+    const std::vector<Function>& get_functions() const;
     const std::vector<Constant>& get_constants() const;
 
     const Predicate& get_predicate(const std::string& name) const;
+    const Function& get_function(const std::string& name) const;
     const Constant& get_constant(const std::string& name) const;
 };
 
@@ -380,19 +421,32 @@ public:
     const std::string& get_name() const;
 };
 
+//quick and dirty fix to expand the Atom class to handle predicates and functions (for now):
+enum class SymbolKind { Predicate, Function };
+using SymbolIndex = int;
+inline std::ostream& operator<<(std::ostream& os, SymbolKind k)
+{
+    switch (k) {
+        case SymbolKind::Predicate: return os << "Predicate";
+        case SymbolKind::Function:  return os << "Function";
+    }
+    return os;            // silence “control reaches end of…” warning
+}
 
 /// @brief Encapsulates the representation of an element in the relation
 ///        of a predicate and provides functionality to access it.
 class Atom : public Base<Atom> {
 private:
     std::string m_name;
-    PredicateIndex m_predicate_index;
+    SymbolKind    m_kind;   //Predicate or Function?
+    SymbolIndex   m_symbol_index; //replaces PredicateIndex
     ObjectIndices m_object_indices;
     bool m_is_static;
 
     Atom(AtomIndex index,
-        const std::string& name,
-        PredicateIndex predicate_index,
+        const std::string& name, 
+        SymbolKind kind,
+        SymbolIndex symbol_index,
         const ObjectIndices &object_indices,
         bool is_static=false);
 
@@ -410,7 +464,9 @@ public:
     size_t hash_impl() const;
 
     const std::string& get_name() const;
-    PredicateIndex get_predicate_index() const;
+    SymbolKind   get_kind() const;
+    SymbolIndex  get_symbol_index() const; //replaces get_predicate_index()
+    PredicateIndex get_predicate_index() const; //keep for now, downward compability??
     const ObjectIndices& get_object_indices() const;
     bool is_static() const;
 };
@@ -434,6 +490,10 @@ private:
     const Atom& add_atom(PredicateIndex predicate_index, const ObjectIndices& object_indices, bool is_static);
     const Atom& add_atom(const Predicate& predicate, const std::vector<Object>& objects, bool is_static);
     const Atom& add_atom(const std::string& predicate_name, const std::vector<std::string>& object_names, bool is_static);
+
+    const Atom& add_function_atom(FunctionIndex function_index, const ObjectIndices& object_indices, bool is_static);
+    const Atom& add_function_atom(const Function& function, const std::vector<Object>& objects, bool is_static);
+    const Atom& add_function_atom(const std::string& function_name, const std::vector<std::string>& object_names, bool is_static);
 
 public:
     InstanceInfo(InstanceIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info);
@@ -464,6 +524,21 @@ public:
      */
     const Atom& add_atom(const std::string& predicate_name, const std::vector<std::string>& object_names);
     const Atom& add_static_atom(const std::string& predicate_name, const std::vector<std::string>& object_names);
+    /**
+     * Alternative 1.1 to add atoms.
+     */
+    const Atom& add_function_atom(const Function& function, const std::vector<Object>& objects);
+    const Atom& add_function_static_atom(const Function& function, const std::vector<Object>& objects);
+    /**
+     * Alternative 2.1 to add atoms.
+     */
+    const Atom& add_function_atom(FunctionIndex function_index, const ObjectIndices& object_indices);
+    const Atom& add_function_static_atom(FunctionIndex function_index, const ObjectIndices& object_indices);
+    /**
+     * Alternative 3.1 to add atoms.
+     */
+    const Atom& add_function_atom(const std::string& function_name, const std::vector<std::string>& object_names);
+    const Atom& add_function_static_atom(const std::string& function_name, const std::vector<std::string>& object_names);
 
     /// @brief Removes all atoms from the instance.
     void clear_atoms();

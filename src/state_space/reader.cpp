@@ -23,6 +23,16 @@ static void parse_predicates_file(const std::string& filename, VocabularyInfo& v
     }
 }
 
+static void parse_functions_file(const std::string& filename, VocabularyInfo& vocabulary_info, bool is_static) {
+    std::ifstream infile(filename);
+    std::string name;
+    int arity;
+    while (infile >> name >> arity) {
+        vocabulary_info.add_function(name, arity, is_static);
+        vocabulary_info.add_function(name + "_g", arity, true);
+    }
+}
+
 
 static void parse_constants_file(const std::string& filename, VocabularyInfo& vocabulary_info) {
     std::ifstream infile(filename);
@@ -52,15 +62,15 @@ static const std::vector<std::pair<AtomTokenType, std::regex>> atom_token_regexe
 static int parse_atom(const std::string& atom_name, dlplan::core::InstanceInfo& instance_info, bool is_static, bool is_goal) {
     auto tokens = utils::Tokenizer<AtomTokenType>().tokenize(atom_name, atom_token_regexes);
     if (tokens.size() < 3) throw std::runtime_error("parse_atom - insufficient number of tokens: " + std::to_string(tokens.size()));
-    if (tokens[0].first != AtomTokenType::NAME) throw std::runtime_error("parse_atom_line - expected predicate name at position 0.");
+    if (tokens[0].first != AtomTokenType::NAME) throw std::runtime_error("parse_atom_line - expected symbol name at position 0.");
     if (tokens[1].first != AtomTokenType::OPENING_PARENTHESIS) throw std::runtime_error("parse_atom_line - expected opening parenthesis at position 1.");
-    std::string predicate_name = tokens[0].second;
+    std::string symbol_name = tokens[0].second;
     if (is_goal) {
-        predicate_name += "_g";
+        symbol_name += "_g";
     }
-    if (predicate_name == "dummy") {
+    if (symbol_name == "dummy") {
         return UNDEFINED;
-    } else if (predicate_name.substr(0, 10) == "new-axiom@") {
+    } else if (symbol_name.substr(0, 10) == "new-axiom@") {
         return UNDEFINED;
     }
     std::vector<std::string> object_names;
@@ -79,8 +89,8 @@ static int parse_atom(const std::string& atom_name, dlplan::core::InstanceInfo& 
     }
     if (tokens.back().first != AtomTokenType::CLOSING_PARENTHESIS) throw std::runtime_error("parse_atom_line - expected closing parenthesis.");
     const auto& atom = (is_static)
-        ? instance_info.add_static_atom(predicate_name, object_names)
-        : instance_info.add_atom(predicate_name, object_names);
+        ? instance_info.add_static_atom(symbol_name, object_names)
+        : instance_info.add_atom(symbol_name, object_names);
     return atom.get_index();
 }
 
@@ -198,6 +208,13 @@ GeneratorResult read(std::shared_ptr<VocabularyInfo> vocabulary_info, int index)
          a spefic instance of the domain
         */
         parse_predicates_file("static-predicates.txt", *new_vocabulary_info, false);
+        parse_functions_file("functions.txt", *new_vocabulary_info, false);
+        /*
+         we parse static functions as non static ones because
+         we want to ensure we cannot deduce this information from
+         a spefic instance of the domain
+        */
+        parse_functions_file("static-functions.txt", *new_vocabulary_info, false);
         parse_constants_file("constants.txt", *new_vocabulary_info);
         vocabulary_info = new_vocabulary_info;
     }

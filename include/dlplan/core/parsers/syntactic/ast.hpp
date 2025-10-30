@@ -17,6 +17,7 @@ namespace dlplan::core::ast
     struct Name;
     struct Constant;
     struct Predicate;
+    struct Function;
     struct Position;
     struct EmptyBoolean;
     struct InclusionBoolean;
@@ -64,6 +65,10 @@ namespace dlplan::core::ast
     };
 
     struct Predicate : x3::position_tagged {
+        Name name;
+    };
+
+    struct Function : x3::position_tagged {
         Name name;
     };
 

@@ -12,6 +12,7 @@
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::ast::Name, alphabetical, suffix)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::ast::Constant, name)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::ast::Predicate, name)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::core::ast::Function, name)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::ast::Integer, value)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::ast::Position, integer)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::ast::EmptyBoolean, element)

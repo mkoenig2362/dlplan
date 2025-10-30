@@ -152,6 +152,18 @@ parse(const ast::Predicate& node, const error_handler_type& error_handler, Synta
     return context.get_vocabulary_info()->get_predicate(name);
 }
 
+core::Function
+parse(const ast::Function& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+    const auto name = parse(node.name, error_handler, context);
+    const auto functions_mapping = context.get_vocabulary_info()->get_functions_mapping();
+    auto it = functions_mapping.find(name);
+    if (it == functions_mapping.end()) {
+        error_handler(node, "undefined function");
+        throw std::runtime_error("Failed parse.");
+    }
+    return context.get_vocabulary_info()->get_function(name);
+}
+
 int
 parse(const ast::Integer& node, const error_handler_type&, SyntacticElementFactory&) {
     return node.value;

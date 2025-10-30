@@ -17,6 +17,7 @@ namespace dlplan::core
             id_map["integer"] = "Integer";
             id_map["constant"] = "Constant";
             id_map["predicate"] = "Predicate";
+            id_map["function"] = "Function";
             id_map["position"] = "Position";
             id_map["boolean"] = "Boolean";
             id_map["numerical"] = "Numerical";

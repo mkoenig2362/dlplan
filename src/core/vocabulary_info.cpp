@@ -26,7 +26,8 @@ VocabularyInfo::~VocabularyInfo() = default;
 bool VocabularyInfo::are_equal_impl(const VocabularyInfo& other) const {
     if (this != &other) {
         return m_predicates == other.m_predicates
-            && m_constants == other.m_constants;
+            && m_constants == other.m_constants
+            && m_functions == other.m_functions;
     }
     return true;
 }
@@ -34,13 +35,15 @@ bool VocabularyInfo::are_equal_impl(const VocabularyInfo& other) const {
 void VocabularyInfo::str_impl(std::stringstream& out) const {
     out << "VocabularyInfo("
        << "constants=" << m_constants << ", "
-       << "predicates=" << m_predicates
+       << "predicates=" << m_predicates << ", "
+       << "functions=" << m_functions
        << ")";
 }
 
 size_t VocabularyInfo::hash_impl() const {
     return hash_combine(
         hash_vector(m_predicates),
+        hash_vector(m_functions),
         hash_vector(m_constants));
 }
 
@@ -52,6 +55,16 @@ const Predicate& VocabularyInfo::add_predicate(const std::string &predicate_name
     }
     m_predicates.push_back(std::move(predicate));
     return m_predicates.back();
+}
+
+const Function& VocabularyInfo::add_function(const std::string &function_name, int arity, bool is_static) {
+    Function function = Function(m_functions.size(), function_name, arity, is_static);
+    auto result = m_function_name_to_index.emplace(function_name, m_functions.size());
+    if (!result.second) {
+        return m_functions[result.first->second];
+    }
+    m_functions.push_back(std::move(function));
+    return m_functions.back();
 }
 
 const Constant& VocabularyInfo::add_constant(const std::string& constant_name) {
@@ -69,6 +82,11 @@ VocabularyInfo::get_predicates_mapping() const {
     return m_predicate_name_to_index;
 }
 
+const std::unordered_map<std::string, FunctionIndex>&
+VocabularyInfo::get_functions_mapping() const {
+    return m_function_name_to_index;
+}
+
 const std::unordered_map<std::string, ConstantIndex>&
 VocabularyInfo::get_constants_mapping() const {
     return m_constant_name_to_index;
@@ -76,6 +94,10 @@ VocabularyInfo::get_constants_mapping() const {
 
 const std::vector<Predicate>& VocabularyInfo::get_predicates() const {
     return m_predicates;
+}
+
+const std::vector<Function>& VocabularyInfo::get_functions() const {
+    return m_functions;
 }
 
 const std::vector<Constant>& VocabularyInfo::get_constants() const {
@@ -87,6 +109,13 @@ const Predicate& VocabularyInfo::get_predicate(const std::string& name) const {
         throw std::runtime_error("VocabularyInfo::get_predicate - predicate " + name + " does not exist.");
     }
     return m_predicates[m_predicate_name_to_index.at(name)];
+}
+
+const Function& VocabularyInfo::get_function(const std::string& name) const {
+    if (m_function_name_to_index.count(name) == 0) {
+        throw std::runtime_error("VocabularyInfo::get_function - function " + name + " does not exist.");
+    }
+    return m_functions[m_function_name_to_index.at(name)];
 }
 
 const Constant& VocabularyInfo::get_constant(const std::string& name) const {

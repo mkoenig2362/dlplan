@@ -35,6 +35,7 @@ namespace dlplan::core::parser
     struct NameClass;
     struct ConstantClass;
     struct PredicateClass;
+    struct FunctionClass;
     struct IntegerClass;
     struct PositionClass;
     struct ConceptOrRoleClass;
@@ -86,6 +87,9 @@ namespace dlplan::core::parser
 
     x3::rule<PredicateClass, ast::Predicate> const
         predicate = "predicate";
+    
+    x3::rule<FunctionClass, ast::Function> const
+        function = "function";
 
     x3::rule<IntegerClass, ast::Integer> const
         integer = "integer";
@@ -232,6 +236,8 @@ namespace dlplan::core::parser
     const auto constant_def = name;
 
     const auto predicate_def = name;
+    
+    const auto function_def = name;
 
     const auto position_def = integer;
 
@@ -328,7 +334,7 @@ namespace dlplan::core::parser
 
 
     BOOST_SPIRIT_DEFINE(
-        name, constant, predicate, integer, position,
+        name, constant, predicate, function, integer, position,
         boolean, boolean_root,
         concept_, concept_root,
         numerical, numerical_root,
@@ -347,6 +353,7 @@ namespace dlplan::core::parser
     struct NameClass : x3::annotate_on_success {};
     struct ConstantClass : x3::annotate_on_success {};
     struct PredicateClass : x3::annotate_on_success {};
+    struct FunctionClass : x3::annotate_on_success {};
     struct IntegerClass : x3::annotate_on_success {};
     struct PositionClass : x3::annotate_on_success {};
     struct EmptyBooleanClass : x3::annotate_on_success {};

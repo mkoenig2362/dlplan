@@ -24,6 +24,19 @@ static std::string compute_atom_name(const Predicate& predicate, const std::vect
     return ss.str();
 }
 
+static std::string compute_atom_name(const Function& function, const std::vector<Object>& objects) {
+    std::stringstream ss;
+    ss << function.get_name() << "(";
+    for (size_t i = 0; i < objects.size(); ++i) {
+        const auto& object = objects[i];
+        ss << object.get_name();
+        if (i < objects.size() - 1) ss << ",";
+    }
+    ss << ")";
+    return ss.str();
+}
+
+
 InstanceInfo::InstanceInfo(InstanceIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info)
     : Base<InstanceInfo>(index), m_vocabulary_info(vocabulary_info) {
 }
@@ -74,6 +87,17 @@ const Atom& InstanceInfo::add_atom(PredicateIndex predicate_idx, const ObjectInd
     return add_atom(predicate, objects, is_static);
 }
 
+const Atom& InstanceInfo::add_function_atom(FunctionIndex function_idx, const ObjectIndices& object_idxs, bool is_static) {
+    // function related
+    const Function& function = m_vocabulary_info->get_functions()[function_idx];
+    // object related
+    std::vector<Object> objects;
+    for (int object_idx : object_idxs) {
+        objects.push_back(get_objects()[object_idx]);
+    }
+    return add_function_atom(function, objects, is_static);
+}
+
 const Atom& InstanceInfo::add_atom(const Predicate& predicate, const std::vector<Object>& objects, bool is_static) {
     if (predicate.get_arity() != static_cast<int>(objects.size())) {
         throw std::runtime_error("InstanceInfo::add_atom - predicate arity does not match the number of objects ("s + std::to_string(predicate.get_arity()) + " != " + std::to_string(objects.size()));
@@ -82,7 +106,7 @@ const Atom& InstanceInfo::add_atom(const Predicate& predicate, const std::vector
     std::vector<int> object_idxs;
     std::for_each(objects.begin(), objects.end(), [&](const auto& object){ object_idxs.push_back(object.get_index()); });
     if (is_static) {
-        Atom atom = Atom(m_static_atoms.size(), name, predicate.get_index(), object_idxs, is_static);
+        Atom atom = Atom(m_static_atoms.size(), name, SymbolKind::Predicate, predicate.get_index(), object_idxs, is_static);
         auto result = m_static_atom_name_to_index.emplace(atom.get_name(), m_static_atoms.size());
         bool newly_inserted = result.second;
         if (!newly_inserted) {
@@ -91,7 +115,35 @@ const Atom& InstanceInfo::add_atom(const Predicate& predicate, const std::vector
         m_static_atoms.push_back(std::move(atom));
         return m_static_atoms.back();
     } else {
-        Atom atom = Atom(m_atoms.size(), name, predicate.get_index(), object_idxs, is_static);
+        Atom atom = Atom(m_atoms.size(), name, SymbolKind::Predicate, predicate.get_index(), object_idxs, is_static);
+        auto result = m_atom_name_to_index.emplace(atom.get_name(), m_atoms.size());
+        bool newly_inserted = result.second;
+        if (!newly_inserted) {
+            return m_atoms[result.first->second];
+        }
+        m_atoms.push_back(std::move(atom));
+        return m_atoms.back();
+    }
+}
+
+const Atom& InstanceInfo::add_function_atom(const Function& function, const std::vector<Object>& objects, bool is_static) {
+    if (function.get_arity() != static_cast<int>(objects.size())) {
+        throw std::runtime_error("InstanceInfo::add_function_atom - function arity does not match the number of objects ("s + std::to_string(function.get_arity()) + " != " + std::to_string(objects.size()));
+    }
+    std::string name = compute_atom_name(function, objects);
+    std::vector<int> object_idxs;
+    std::for_each(objects.begin(), objects.end(), [&](const auto& object){ object_idxs.push_back(object.get_index()); });
+    if (is_static) {
+        Atom atom = Atom(m_static_atoms.size(), name, SymbolKind::Function, function.get_index(), object_idxs, is_static);
+        auto result = m_static_atom_name_to_index.emplace(atom.get_name(), m_static_atoms.size());
+        bool newly_inserted = result.second;
+        if (!newly_inserted) {
+            throw std::runtime_error("InstanceInfo::add_function_atom - atom with name ("s + atom.get_name() + ") already exists.");
+        }
+        m_static_atoms.push_back(std::move(atom));
+        return m_static_atoms.back();
+    } else {
+        Atom atom = Atom(m_atoms.size(), name, SymbolKind::Function, function.get_index(), object_idxs, is_static);
         auto result = m_atom_name_to_index.emplace(atom.get_name(), m_atoms.size());
         bool newly_inserted = result.second;
         if (!newly_inserted) {
@@ -118,6 +170,24 @@ const Atom& InstanceInfo::add_atom(const std::string &predicate_name, const std:
         object_idxs.push_back(object_idx);
     }
     return add_atom(predicate_idx, object_idxs, is_static);
+}
+
+const Atom& InstanceInfo::add_function_atom(const std::string &function_name, const std::vector<std::string> &object_names, bool is_static) {
+    // function related
+    int function_idx = m_vocabulary_info->get_function(function_name).get_index();
+    // object related
+    std::vector<int> object_idxs;
+    for (int i = 0; i < static_cast<int>(object_names.size()); ++i) {
+        const std::string& object_name = object_names[i];
+        auto result = m_object_name_to_index.emplace(object_name, m_objects.size());
+        int object_idx = result.first->second;
+        bool newly_inserted = result.second;
+        if (newly_inserted) {
+            m_objects.push_back(Object(object_idx, object_name));
+        }
+        object_idxs.push_back(object_idx);
+    }
+    return add_function_atom(function_idx, object_idxs, is_static);
 }
 
 
@@ -155,6 +225,29 @@ const Atom& InstanceInfo::add_static_atom(const std::string& predicate_name, con
     return add_atom(predicate_name, object_names, true);
 }
 
+const Atom& InstanceInfo::add_function_atom(const Function& function, const std::vector<Object>& objects) {
+    return add_function_atom(function, objects, false);
+}
+
+const Atom& InstanceInfo::add_function_static_atom(const Function& function, const std::vector<Object>& objects) {
+    return add_function_atom(function, objects, true);
+}
+
+const Atom& InstanceInfo::add_function_atom(FunctionIndex function_idx, const ObjectIndices& object_idxs) {
+    return add_function_atom(function_idx, object_idxs, false);
+}
+
+const Atom& InstanceInfo::add_function_static_atom(FunctionIndex function_idx, const ObjectIndices& object_idxs) {
+    return add_function_atom(function_idx, object_idxs, true);
+}
+
+const Atom& InstanceInfo::add_function_atom(const std::string& function_name, const std::vector<std::string>& object_names) {
+    return add_function_atom(function_name, object_names, false);
+}
+
+const Atom& InstanceInfo::add_function_static_atom(const std::string& function_name, const std::vector<std::string>& object_names) {
+    return add_function_atom(function_name, object_names, true);
+}
 
 const std::vector<Atom>& InstanceInfo::get_atoms() const {
     return m_atoms;

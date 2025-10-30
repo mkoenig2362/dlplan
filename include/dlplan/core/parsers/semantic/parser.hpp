@@ -18,6 +18,8 @@ extern core::Constant parse(const ast::Constant& node, const dlplan::error_handl
 
 extern core::Predicate parse(const ast::Predicate& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
 
+extern core::Function parse(const ast::Function& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
+
 extern int parse(const ast::Integer& node, const dlplan::error_handler_type&, SyntacticElementFactory&);
 
 extern int parse(const ast::Position& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);

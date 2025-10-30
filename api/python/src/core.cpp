@@ -71,14 +71,27 @@ void init_core(py::module_ &m_core) {
         .def("is_static", &Predicate::is_static)
     ;
 
+    py::class_<Function>(m_core, "Function")
+        .def("__eq__", &Function::are_equal_impl)
+        .def("__ne__", &Function::operator!=)
+        .def("__str__", py::overload_cast<>(&Function::str, py::const_))
+        .def("get_index", &Function::get_index)
+        .def("get_name", &Function::get_name)
+        .def("get_arity", &Function::get_arity)
+        .def("is_static", &Function::is_static)
+    ;
+
     py::class_<VocabularyInfo, std::shared_ptr<VocabularyInfo>>(m_core, "VocabularyInfo")
         .def(py::init<>())
         .def("__str__", py::overload_cast<>(&VocabularyInfo::str, py::const_))
         .def("add_predicate", &VocabularyInfo::add_predicate, py::arg("name"), py::arg("arity"), py::arg("is_static") = false)
+        .def("add_function", &VocabularyInfo::add_function, py::arg("name"), py::arg("arity"), py::arg("is_static") = false)
         .def("add_constant", &VocabularyInfo::add_constant)
         .def("get_predicates", &VocabularyInfo::get_predicates)
+        .def("get_functions", &VocabularyInfo::get_functions)
         .def("get_constants", &VocabularyInfo::get_constants)
         .def("get_predicate", &VocabularyInfo::get_predicate)
+        .def("get_function", &VocabularyInfo::get_function)
         .def("get_constant", &VocabularyInfo::get_constant)
     ;
 
@@ -96,7 +109,8 @@ void init_core(py::module_ &m_core) {
         .def("__str__",  py::overload_cast<>(&Atom::str, py::const_))
         .def("get_index", &Atom::get_index)
         .def("get_name", &Atom::get_name)
-        .def("get_predicate_index", &Atom::get_predicate_index)
+        .def("get_predicate_index", &Atom::get_predicate_index) //downward compability?
+        .def("get_symbol_index", &Atom::get_symbol_index)
         .def("get_object_indices", &Atom::get_object_indices)
         .def("is_static", &Atom::is_static)
     ;
@@ -111,6 +125,12 @@ void init_core(py::module_ &m_core) {
         .def("add_static_atom", py::overload_cast<const Predicate&, const std::vector<Object>&>(&InstanceInfo::add_static_atom))
         .def("add_static_atom", py::overload_cast<int, const std::vector<int>&>(&InstanceInfo::add_static_atom))
         .def("add_static_atom", py::overload_cast<const std::string&, const std::vector<std::string>&>(&InstanceInfo::add_static_atom))
+        .def("add_function_atom", py::overload_cast<const Function&, const std::vector<Object>&>(&InstanceInfo::add_function_atom))
+        .def("add_function_atom", py::overload_cast<int, const std::vector<int>&>(&InstanceInfo::add_function_atom))
+        .def("add_function_atom", py::overload_cast<const std::string&, const std::vector<std::string>&>(&InstanceInfo::add_function_atom))
+        .def("add_function_static_atom", py::overload_cast<const Function&, const std::vector<Object>&>(&InstanceInfo::add_function_static_atom))
+        .def("add_function_static_atom", py::overload_cast<int, const std::vector<int>&>(&InstanceInfo::add_function_static_atom))
+        .def("ad_functiond_static_atom", py::overload_cast<const std::string&, const std::vector<std::string>&>(&InstanceInfo::add_function_static_atom))
         .def("get_index", &InstanceInfo::get_index)
         .def("get_objects", &InstanceInfo::get_objects)
         .def("get_atoms", &InstanceInfo::get_atoms)

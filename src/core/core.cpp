@@ -11,6 +11,9 @@ namespace std {
     std::size_t hash<dlplan::core::Predicate>::operator()(const dlplan::core::Predicate& predicate) const {
         return predicate.hash();
     }
+    std::size_t hash<dlplan::core::Function>::operator()(const dlplan::core::Function& function) const {
+        return function.hash();
+    }
     std::size_t hash<dlplan::core::Object>::operator()(const dlplan::core::Object& object) const {
         return object.hash();
     }
