@@ -31,7 +31,7 @@ private:
 
     template<typename DENOTATION_TYPE>
     void compute_result(const DENOTATION_TYPE& denot, double& result) const {
-        result = std::numeric_limits<double>::infinity();
+        result = INF_DOUBLE;
         for (const auto& pos : denot.to_vector()) {
             double value = denot.get_value(pos);
             if (std::isnan(value)) continue;

@@ -70,8 +70,6 @@ int DistanceFrame::compute_complexity_impl() const {
 void DistanceFrame::str_impl(std::stringstream& out) const {
     out << "f_distance" << "(";
     m_frame_unary->str(out);
-    out << ",";
-    m_frame_unary->str(out);
     out << ")";
 }
 

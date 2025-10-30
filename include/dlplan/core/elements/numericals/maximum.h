@@ -32,7 +32,7 @@ private:
     template<typename DENOTATION_TYPE>
     void compute_result(const DENOTATION_TYPE& denot, double& result) const {
         if (denot.empty()) {
-            result = INF;
+            result = INF_DOUBLE;
             return;
         }
         result = 0.0;
