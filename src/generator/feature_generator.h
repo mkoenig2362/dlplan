@@ -31,6 +31,8 @@
 
 #include "rules/frames/primitive_unary.h"
 #include "rules/frames/primitive_binary.h"
+#include "rules/frames/restrict_unary.h"
+#include "rules/frames/restrict_binary.h"
 
 #include "rules/numericals/concept_distance.h"
 #include "rules/numericals/count.h"
@@ -65,7 +67,7 @@ private:
      */
     std::vector<Rule_Ptr> m_concept_inductive_rules;
     std::vector<Rule_Ptr> m_role_inductive_rules;
-    //std::vector<Rule_Ptr> m_frame_inductive_rules;
+    std::vector<Rule_Ptr> m_frame_inductive_rules;
     std::vector<Rule_Ptr> m_boolean_inductive_rules;
     std::vector<Rule_Ptr> m_numerical_inductive_rules;
 
@@ -109,6 +111,8 @@ private:
 
     Rule_Ptr f_primitive_unary;
     Rule_Ptr f_primitive_binary;
+    Rule_Ptr f_restrict_unary;
+    Rule_Ptr f_restrict_binary;
 
 private:
     /**
@@ -200,6 +204,8 @@ public:
     void set_generate_transitive_reflexive_closure_role(bool enable);
     void set_generate_primitive_frame_unary(bool enable);
     void set_generate_primitive_frame_binary(bool enable);
+    void set_generate_restrict_frame_unary(bool enable);
+    void set_generate_restrict_frame_binary(bool enable);
 };
 
 }

@@ -104,6 +104,10 @@ extern std::shared_ptr<const core::FrameUnary> parse(const ast::PrimitiveFrameUn
 
 extern std::shared_ptr<const core::FrameBinary> parse(const ast::PrimitiveFrameBinary& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
 
+extern std::shared_ptr<const core::FrameUnary> parse(const ast::RestrictFrameUnary& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
+
+extern std::shared_ptr<const core::FrameBinary> parse(const ast::RestrictFrameBinary& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
+
 extern boost::variant<std::shared_ptr<const core::FrameUnary>, std::shared_ptr<const core::FrameBinary>> parse(const ast::FrameUnaryOrBinary& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
 
 extern std::shared_ptr<const Boolean> parse(const ast::Boolean& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);

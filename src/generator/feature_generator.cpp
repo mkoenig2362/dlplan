@@ -51,7 +51,9 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
       r_transitive_closure(std::make_shared<rules::TransitiveClosureRole>()),
       r_transitive_reflexive_closure(std::make_shared<rules::TransitiveReflexiveClosureRole>()),
       f_primitive_unary(std::make_shared<rules::PrimitiveFrameUnary>()),
-      f_primitive_binary(std::make_shared<rules::PrimitiveFrameBinary>()) {
+      f_primitive_binary(std::make_shared<rules::PrimitiveFrameBinary>()),
+      f_restrict_unary(std::make_shared<rules::RestrictFrameUnary>()),
+      f_restrict_binary(std::make_shared<rules::RestrictFrameBinary>()) {
     m_primitive_rules.emplace_back(b_nullary);
     m_primitive_rules.emplace_back(c_one_of);
     m_primitive_rules.emplace_back(c_top);
@@ -83,6 +85,9 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
     m_role_inductive_rules.emplace_back(r_compose);
     m_role_inductive_rules.emplace_back(r_transitive_closure);
     m_role_inductive_rules.emplace_back(r_transitive_reflexive_closure);
+
+    m_frame_inductive_rules.emplace_back(f_restrict_unary);
+    m_frame_inductive_rules.emplace_back(f_restrict_binary);
 
     m_boolean_inductive_rules.emplace_back(b_empty);
     m_boolean_inductive_rules.emplace_back(b_inclusion);
@@ -129,7 +134,7 @@ GeneratedFeatures FeatureGeneratorImpl::generate(
     for (auto& r : m_primitive_rules) r->initialize();
     for (auto& r : m_concept_inductive_rules) r->initialize();
     for (auto& r : m_role_inductive_rules) r->initialize();
-    //for (auto& r : m_frame_inductive_rules) r->initialize();
+    for (auto& r : m_frame_inductive_rules) r->initialize();
     for (auto& r : m_boolean_inductive_rules) r->initialize();
     for (auto& r : m_numerical_inductive_rules) r->initialize();
     // Initialize memory to store intermediate results.
@@ -198,12 +203,10 @@ void FeatureGeneratorImpl::generate_inductively(
         }
         if (target_complexity <= frame_complexity_limit) {
             if (data.reached_resource_limit()) break;
-            std::cout << "Generating complex frame features";
-            /*TODO::::
             for (const auto& rule : m_frame_inductive_rules) {
                 if (data.reached_resource_limit()) break;
                 rule->generate(states, target_complexity, data, caches);
-            }*/
+            }
         }
         if (target_complexity <= boolean_complexity_limit) {
             if (data.reached_resource_limit()) break;
@@ -235,7 +238,7 @@ void FeatureGeneratorImpl::print_statistics() const {
     for (auto& r : m_primitive_rules) r->print_statistics();
     for (auto& r : m_concept_inductive_rules) r->print_statistics();
     for (auto& r : m_role_inductive_rules) r->print_statistics();
-    //for (auto& r : m_frame_inductive_rules) r->print_statistics();
+    for (auto& r : m_frame_inductive_rules) r->print_statistics();
     for (auto& r : m_boolean_inductive_rules) r->print_statistics();
     for (auto& r : m_numerical_inductive_rules) r->print_statistics();
 }
@@ -382,6 +385,14 @@ void FeatureGeneratorImpl::set_generate_primitive_frame_unary(bool enable) {
 
 void FeatureGeneratorImpl::set_generate_primitive_frame_binary(bool enable) {
     f_primitive_binary->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_restrict_frame_unary(bool enable) {
+    f_restrict_unary->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_restrict_frame_binary(bool enable) {
+    f_restrict_binary->set_enabled(enable);
 }
 
 }

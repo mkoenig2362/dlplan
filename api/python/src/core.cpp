@@ -60,6 +60,7 @@ void init_core(py::module_ &m_core) {
         .def("set_value", &FrameUnaryDenotation::set_value)
         .def("contains", &FrameUnaryDenotation::contains)
         .def("insert", &FrameUnaryDenotation::insert)
+        .def("erase", &FrameUnaryDenotation::erase)
         .def("empty", &FrameUnaryDenotation::empty)
         .def("intersects", &FrameUnaryDenotation::intersects)
         .def("is_subset_of", &FrameUnaryDenotation::is_subset_of)
@@ -79,6 +80,7 @@ void init_core(py::module_ &m_core) {
         .def("set_value", &FrameBinaryDenotation::set_value)
         .def("contains", &FrameBinaryDenotation::contains)
         .def("insert", &FrameBinaryDenotation::insert)
+        .def("erase", &FrameBinaryDenotation::erase)
         .def("empty", &FrameBinaryDenotation::empty)
         .def("intersects", &FrameBinaryDenotation::intersects)
         .def("is_subset_of", &FrameBinaryDenotation::is_subset_of)
@@ -335,6 +337,8 @@ void init_core(py::module_ &m_core) {
 
         .def("make_primitive_frame_unary", &SyntacticElementFactory::make_primitive_frame_unary)
         .def("make_primitive_frame_binary", &SyntacticElementFactory::make_primitive_frame_binary)
+        .def("make_restrict_frame_unary", &SyntacticElementFactory::make_restrict_frame_unary)
+        .def("make_restrict_frame_binary", &SyntacticElementFactory::make_restrict_frame_binary)
 
         .def("get_vocabulary_info", &SyntacticElementFactory::get_vocabulary_info)
     ;

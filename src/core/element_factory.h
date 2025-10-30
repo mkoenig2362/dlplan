@@ -40,6 +40,8 @@
 #include "../../include/dlplan/core/elements/roles/transitive_reflexive_closure.h"
 #include "../../include/dlplan/core/elements/frames/primitive_unary.h"
 #include "../../include/dlplan/core/elements/frames/primitive_binary.h"
+#include "../../include/dlplan/core/elements/frames/restrict_unary.h"
+#include "../../include/dlplan/core/elements/frames/restrict_binary.h"
 
 #include "../../include/dlplan/core.h"
 #include "../../include/dlplan/utils/factory.h"
@@ -97,7 +99,9 @@ private:
         , TransitiveClosureRole
         , TransitiveReflexiveClosureRole
         , PrimitiveFrameUnary
-        , PrimitiveFrameBinary> m_cache;
+        , PrimitiveFrameBinary
+        , RestrictFrameUnary
+        , RestrictFrameBinary> m_cache;
 
 public:
     SyntacticElementFactoryImpl(std::shared_ptr<VocabularyInfo> vocabulary_info);
@@ -179,6 +183,8 @@ public:
 
     std::shared_ptr<const FrameUnary> make_primitive_frame_unary(const Function& function, int pos);
     std::shared_ptr<const FrameBinary> make_primitive_frame_binary(const Function& function, int pos_1, int pos_2);
+    std::shared_ptr<const FrameUnary> make_restrict_frame_unary(const std::shared_ptr<const FrameUnary>& frame_unary, const std::shared_ptr<const Concept>& concept_);
+    std::shared_ptr<const FrameBinary> make_restrict_frame_binary(const std::shared_ptr<const FrameBinary>& frame_binary, const std::shared_ptr<const Role>& role);
 
     /**
      * Getters.

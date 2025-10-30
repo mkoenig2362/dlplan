@@ -563,6 +563,20 @@ parse(const ast::PrimitiveFrameBinary& node, const error_handler_type& error_han
         parse(node.pos_2, error_handler, context));
 }
 
+std::shared_ptr<const core::FrameUnary>
+parse(const ast::RestrictFrameUnary& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+    return context.make_restrict_frame_unary(
+        parse(node.frame_unary, error_handler, context),
+        parse(node.concept_, error_handler, context));
+}
+
+std::shared_ptr<const core::FrameBinary>
+parse(const ast::RestrictFrameBinary& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+    return context.make_restrict_frame_binary(
+        parse(node.frame_binary, error_handler, context),
+        parse(node.role, error_handler, context));
+}
+
 boost::variant<std::shared_ptr<const core::Concept>, std::shared_ptr<const core::Role>>
 parse(const ast::ConceptOrRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     ConceptOrRoleVisitor visitor(error_handler, context);

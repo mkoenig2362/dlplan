@@ -97,6 +97,10 @@ void FrameBinaryDenotation::insert(const PairOfObjectIndices& indices, double va
     set_value(indices, value);
 }
 
+void FrameBinaryDenotation::erase(const PairOfObjectIndices& indices) {
+    set_value(indices, std::numeric_limits<double>::quiet_NaN());
+}
+
 int FrameBinaryDenotation::size() const {
     return std::count_if(m_data.begin(), m_data.end(), [](double v) { return !std::isnan(v); });
 }

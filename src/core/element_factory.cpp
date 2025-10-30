@@ -425,6 +425,14 @@ std::shared_ptr<const FrameBinary> SyntacticElementFactoryImpl::make_primitive_f
     return m_cache.get_or_create<PrimitiveFrameBinary>(m_vocabulary_info, function, pos_1, pos_2).object;
 }
 
+std::shared_ptr<const FrameUnary> SyntacticElementFactoryImpl::make_restrict_frame_unary(const std::shared_ptr<const FrameUnary>& frame_unary, const std::shared_ptr<const Concept>& concept_) {
+    return m_cache.get_or_create<RestrictFrameUnary>(m_vocabulary_info, frame_unary, concept_).object;
+}
+
+std::shared_ptr<const FrameBinary> SyntacticElementFactoryImpl::make_restrict_frame_binary(const std::shared_ptr<const FrameBinary>& frame_binary, const std::shared_ptr<const Role>& role) {
+    return m_cache.get_or_create<RestrictFrameBinary>(m_vocabulary_info, frame_binary, role).object;
+}
+
 std::shared_ptr<VocabularyInfo> SyntacticElementFactoryImpl::get_vocabulary_info() const {
     return m_vocabulary_info;
 }
@@ -478,6 +486,6 @@ namespace dlplan {
         , core::TransitiveReflexiveClosureRole
         , core::PrimitiveFrameUnary
         , core::PrimitiveFrameBinary
-        , core::MinimumNumerical<core::FrameUnary>
-        , core::MinimumNumerical<core::FrameBinary>>;
+        , core::RestrictFrameUnary
+        , core::RestrictFrameBinary>;
 }

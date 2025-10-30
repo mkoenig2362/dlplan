@@ -322,6 +322,14 @@ std::shared_ptr<const FrameBinary>SyntacticElementFactory::make_primitive_frame_
     return m_pImpl->make_primitive_frame_binary(function, pos_1, pos_2);
 }
 
+std::shared_ptr<const FrameUnary>SyntacticElementFactory::make_restrict_frame_unary(const std::shared_ptr<const FrameUnary>& frame_unary, const std::shared_ptr<const Concept>& concept_) {
+    return m_pImpl->make_restrict_frame_unary(frame_unary, concept_);
+}
+
+std::shared_ptr<const FrameBinary>SyntacticElementFactory::make_restrict_frame_binary(const std::shared_ptr<const FrameBinary>& frame_binary, const std::shared_ptr<const Role>& role) {
+    return m_pImpl->make_restrict_frame_binary(frame_binary, role);
+}
+
 
 // Explicit template instantiations
 template class Element<ConceptDenotation, ConceptDenotations>;

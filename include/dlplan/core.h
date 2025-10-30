@@ -265,6 +265,7 @@ public:
 
     bool contains(ObjectIndex index) const;
     void insert(ObjectIndex index, double value);
+    void erase(ObjectIndex value);
 
     int size() const;
     bool empty() const;
@@ -312,6 +313,7 @@ public:
 
     bool contains(const PairOfObjectIndices& indices) const;
     void insert(const PairOfObjectIndices& indices, double value);
+    void erase(const PairOfObjectIndices& value);
 
     int size() const;
     bool empty() const;
@@ -979,6 +981,8 @@ public:
 
     std::shared_ptr<const FrameUnary> make_primitive_frame_unary(const Function& function, int pos);
     std::shared_ptr<const FrameBinary> make_primitive_frame_binary(const Function& function, int pos_1, int pos_2);
+    std::shared_ptr<const FrameUnary> make_restrict_frame_unary(const std::shared_ptr<const FrameUnary>& frame_unary, const std::shared_ptr<const Concept>& concept_);
+    std::shared_ptr<const FrameBinary> make_restrict_frame_binary(const std::shared_ptr<const FrameBinary>& frame_binary, const std::shared_ptr<const Role>& role);
 };
 
 }

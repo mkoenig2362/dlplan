@@ -98,6 +98,10 @@ void FrameUnaryDenotation::insert(ObjectIndex index, double value) {
     set_value(index, value);
 }
 
+void FrameUnaryDenotation::erase(ObjectIndex index) {
+    set_value(index, std::numeric_limits<double>::quiet_NaN());
+}
+
 int FrameUnaryDenotation::size() const {
     return std::count_if(m_data.begin(), m_data.end(), [](double v) { return !std::isnan(v); });
 }

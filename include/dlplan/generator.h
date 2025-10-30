@@ -86,6 +86,8 @@ public:
     void set_generate_transitive_reflexive_closure_role(bool enable);
     void set_generate_primitive_frame_unary(bool enable);
     void set_generate_primitive_frame_binary(bool enable);
+    void set_generate_restrict_frame_unary(bool enable);
+    void set_generate_restrict_frame_binary(bool enable);
 };
 
 
@@ -136,7 +138,9 @@ extern GeneratedFeatures generate_features(
     bool generate_transitive_closure_role=true,
     bool generate_transitive_reflexive_closure_role=false,
     bool generate_primitive_frame_unary=true,
-    bool generate_primitive_frame_binary=true);
+    bool generate_primitive_frame_binary=true,
+    bool generate_restrict_frame_unary=true,
+    bool generate_restrict_frame_binary=true);
 }
 
 #endif

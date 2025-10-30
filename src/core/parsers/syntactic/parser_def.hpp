@@ -79,6 +79,8 @@ namespace dlplan::core::parser
     struct TransitiveReflexiveClosureRoleClass;
     struct PrimitiveFrameUnaryClass;
     struct PrimitiveFrameBinaryClass;
+    struct RestrictFrameUnaryClass;
+    struct RestrictFrameBinaryClass;
 
     ///////////////////////////////////////////////////////////////////////////
     // Rules
@@ -226,6 +228,12 @@ namespace dlplan::core::parser
     x3::rule<PrimitiveFrameBinaryClass, ast::PrimitiveFrameBinary> const
         primitive_frame_binary = "primitive_frame_binary";
 
+    x3::rule<RestrictFrameUnaryClass, ast::RestrictFrameUnary> const
+        restrict_frame_unary = "restrict_frame_unary";
+
+    x3::rule<RestrictFrameBinaryClass, ast::RestrictFrameBinary> const
+        restrict_frame_binary = "restrict_frame_binary";
+
     /* Privates rules with annotation and error handling */
     boolean_root_type const boolean_root = "boolean_root";
 
@@ -355,6 +363,10 @@ namespace dlplan::core::parser
 
     const auto primitive_frame_binary_def = lit("f_primitive_binary") > lit('(') > function > lit(',') > position  > lit(',') > position > lit(')');
 
+    const auto restrict_frame_unary_def = lit("f_restrict_unary") > lit('(') > frame_unary > lit(',') > concept_ > lit(')');
+
+    const auto restrict_frame_binary_def = lit("f_restrict_binary") > lit('(') > frame_binary > lit(',') > role > lit(')');
+
     const auto boolean_def = empty_boolean | inclusion_boolean | nullary_boolean;
     const auto boolean_root_def = eps > boolean;
 
@@ -372,9 +384,9 @@ namespace dlplan::core::parser
     const auto concept_or_role_def = concept_ | role;
 
     // Note: non recursive comes first, i.e., primitive_frame_unary, primitive_frame_binary
-    const auto frame_unary_def = primitive_frame_unary;
+    const auto frame_unary_def = primitive_frame_unary | restrict_frame_unary;
     const auto frame_unary_root_def = eps > frame_unary;
-    const auto frame_binary_def = primitive_frame_binary;
+    const auto frame_binary_def = primitive_frame_binary | restrict_frame_binary;
     const auto frame_binary_root_def = eps > frame_binary;
 
     const auto frame_unary_or_binary_def = frame_unary | frame_binary;
@@ -397,7 +409,7 @@ namespace dlplan::core::parser
         all_concept, and_concept, bot_concept, diff_concept, equal_concept, not_concept, one_of_concept, or_concept, primitive_concept, projection_concept, some_concept, subset_concept, top_concept,
         concept_distance_numerical, count_numerical, role_distance_numerical, sum_concept_distance_numerical, sum_role_distance_numerical, minimum_numerical, maximum_numerical, sum_frame_numerical,
         and_role, compose_role, diff_role, identity_role, inverse_role, not_role, or_role, primitive_role, restrict_role, til_c_role, top_role, transitive_closure_role, transitive_reflexive_closure_role,
-        primitive_frame_unary, primitive_frame_binary)
+        primitive_frame_unary, primitive_frame_binary, restrict_frame_unary, restrict_frame_binary)
 
     ///////////////////////////////////////////////////////////////////////////
     // Annotation and Error handling
@@ -448,6 +460,8 @@ namespace dlplan::core::parser
     struct TransitiveReflexiveClosureRoleClass : x3::annotate_on_success {};
     struct PrimitiveFrameUnaryClass : x3::annotate_on_success {};
     struct PrimitiveFrameBinaryClass : x3::annotate_on_success {};
+    struct RestrictFrameUnaryClass : x3::annotate_on_success {};
+    struct RestrictFrameBinaryClass : x3::annotate_on_success {};
 
     struct BooleanClass : x3::annotate_on_success {};
     struct BooleanRootClass : x3::annotate_on_success, error_handler_core {};
