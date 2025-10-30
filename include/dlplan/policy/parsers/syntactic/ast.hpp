@@ -168,6 +168,52 @@ namespace dlplan::policy::ast
     };
 
 
+    /* FrameUnary entry and references */
+    struct FrameUnaryDefinition : x3::position_tagged {
+        Name key;
+    };
+
+    struct FrameUnaryImplementation {
+        core::ast::FrameUnary frame_unary;
+    };
+
+    struct FrameUnary : x3::position_tagged {
+        FrameUnaryDefinition definition;
+        FrameUnaryImplementation implementation;
+    };
+
+    struct FrameUnaryReference : x3::position_tagged {
+        Name key;
+    };
+
+    struct FramesUnary : x3::position_tagged {
+        std::vector<FrameUnary> definitions;
+    };
+
+
+    /* FrameBinary entry and references */
+    struct FrameBinaryDefinition : x3::position_tagged {
+        Name key;
+    };
+
+    struct FrameBinaryImplementation {
+        core::ast::FrameBinary frame_binary;
+    };
+
+    struct FrameBinary : x3::position_tagged {
+        FrameBinaryDefinition definition;
+        FrameBinaryImplementation implementation;
+    };
+
+    struct FrameBinaryReference : x3::position_tagged {
+        Name key;
+    };
+
+    struct FramesBinary : x3::position_tagged {
+        std::vector<FrameBinary> definitions;
+    };
+
+
     /* Condition and effects */
     struct PositiveBooleanCondition : x3::position_tagged {
         BooleanReference reference;
@@ -302,6 +348,8 @@ namespace dlplan::policy::ast
         boost::optional<Numericals> numericals;
         boost::optional<Concepts> concepts;
         boost::optional<Roles> roles;
+        boost::optional<FramesUnary> frames_unary;
+        boost::optional<FramesBinary> frames_binary;
         Rules rules;
     };
 }

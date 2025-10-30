@@ -35,6 +35,18 @@ BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Role, definition, implementation)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::RoleReference, key)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Roles, definitions)
 
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::FrameUnaryDefinition, key)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::FrameUnaryImplementation, frame_unary)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::FrameUnary, definition, implementation)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::FrameUnaryReference, key)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::FramesUnary, definitions)
+
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::FrameBinaryDefinition, key)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::FrameBinaryImplementation, frame_binary)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::FrameBinary, definition, implementation)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::FrameBinaryReference, key)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::FramesBinary, definitions)
+
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::PositiveBooleanCondition, reference)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::NegativeBooleanCondition, reference)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::GreaterNumericalCondition, reference)
@@ -60,6 +72,6 @@ BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::EqualConceptEffect, reference)
 
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Rule, feature_conditions, feature_effects)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Rules, rules)
-BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Policy, booleans, numericals, concepts, roles, rules)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::policy::ast::Policy, booleans, numericals, concepts, roles, frames_unary, frames_binary, rules)
 
 #endif

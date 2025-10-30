@@ -60,7 +60,7 @@ const std::string& Atom::get_name() const {
 }
 
 PredicateIndex Atom::get_predicate_index() const {
-    std::cout << "deprecated";
+    //std::cout << "deprecated";
     return m_symbol_index;
 } //deprecated
 
@@ -76,4 +76,11 @@ bool Atom::is_static() const {
     return m_is_static;
 }
 
+bool Atom::is_function() const {
+    return m_kind == SymbolKind::Function;
+}
+
+bool Atom::is_predicate() const {
+    return m_kind == SymbolKind::Predicate;
+}
 }

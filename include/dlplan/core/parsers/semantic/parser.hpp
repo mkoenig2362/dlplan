@@ -94,6 +94,10 @@ extern std::shared_ptr<const core::Role> parse(const ast::TransitiveReflexiveClo
 
 extern boost::variant<std::shared_ptr<const core::Concept>, std::shared_ptr<const core::Role>> parse(const ast::ConceptOrRole& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
 
+extern std::shared_ptr<const core::FrameUnary> parse(const ast::PrimitiveFrameUnary& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
+
+extern std::shared_ptr<const core::FrameBinary> parse(const ast::PrimitiveFrameBinary& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
+
 extern std::shared_ptr<const Boolean> parse(const ast::Boolean& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
 
 extern std::shared_ptr<const Numerical> parse(const ast::Numerical& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
@@ -101,6 +105,10 @@ extern std::shared_ptr<const Numerical> parse(const ast::Numerical& node, const 
 extern std::shared_ptr<const Concept> parse(const ast::Concept& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
 
 extern std::shared_ptr<const Role> parse(const ast::Role& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
+
+extern std::shared_ptr<const FrameUnary> parse(const ast::FrameUnary& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
+
+extern std::shared_ptr<const FrameBinary> parse(const ast::FrameBinary& node, const dlplan::error_handler_type& error_handler, SyntacticElementFactory& context);
 
 }
 

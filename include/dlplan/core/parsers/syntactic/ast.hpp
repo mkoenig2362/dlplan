@@ -53,6 +53,8 @@ namespace dlplan::core::ast
     struct TopRole;
     struct TransitiveClosureRole;
     struct TransitiveReflexiveClosureRole;
+    struct PrimitiveFrameUnary;
+    struct PrimitiveFrameBinary;
 
     /* Basic character compounds */
     struct Name : x3::position_tagged {
@@ -134,10 +136,24 @@ namespace dlplan::core::ast
         using base_type::operator=;
     };
 
+    struct FrameUnary : x3::position_tagged, x3::variant<
+        x3::forward_ast<PrimitiveFrameUnary>> {
+        using base_type::base_type;
+        using base_type::operator=;
+    };
+
+    struct FrameBinary : x3::position_tagged, x3::variant<
+        x3::forward_ast<PrimitiveFrameBinary>> {
+        using base_type::base_type;
+        using base_type::operator=;
+    };
+
 
     struct Element : x3::position_tagged, x3::variant<
         x3::forward_ast<Concept>,
         x3::forward_ast<Role>,
+        x3::forward_ast<FrameUnary>,
+        x3::forward_ast<FrameBinary>,
         x3::forward_ast<Boolean>,
         x3::forward_ast<Numerical>> {
         using base_type::base_type;
@@ -309,6 +325,17 @@ namespace dlplan::core::ast
 
     struct TransitiveReflexiveClosureRole : x3::position_tagged {
         Role role;
+    };
+
+    struct PrimitiveFrameUnary : x3::position_tagged {
+        Function function;
+        Position pos;
+    };
+
+    struct PrimitiveFrameBinary : x3::position_tagged {
+        Function function;
+        Position pos_1;
+        Position pos_2;
     };
 }
 

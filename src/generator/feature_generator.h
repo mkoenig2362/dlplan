@@ -29,6 +29,9 @@
 #include "rules/roles/transitive_closure.h"
 #include "rules/roles/transitive_reflexive_closure.h"
 
+#include "rules/frames/primitive_unary.h"
+#include "rules/frames/primitive_binary.h"
+
 #include "rules/numericals/concept_distance.h"
 #include "rules/numericals/count.h"
 
@@ -59,6 +62,7 @@ private:
      */
     std::vector<Rule_Ptr> m_concept_inductive_rules;
     std::vector<Rule_Ptr> m_role_inductive_rules;
+    //std::vector<Rule_Ptr> m_frame_inductive_rules;
     std::vector<Rule_Ptr> m_boolean_inductive_rules;
     std::vector<Rule_Ptr> m_numerical_inductive_rules;
 
@@ -97,6 +101,9 @@ private:
     Rule_Ptr r_transitive_closure;
     Rule_Ptr r_transitive_reflexive_closure;
 
+    Rule_Ptr f_primitive_unary;
+    Rule_Ptr f_primitive_binary;
+
 private:
     /**
      * Generates all Elements with complexity 1.
@@ -113,6 +120,7 @@ private:
         const core::States& states,
         int concept_complexity_limit,
         int role_complexity_limit,
+        int frame_complexity_limit,
         int boolean_complexity_limit,
         int count_numerical_complexity_limit,
         int distance_numerical_complexity_limit,
@@ -140,6 +148,7 @@ public:
         const core::States& states,
         int concept_complexity_limit,
         int role_complexity_limit,
+        int frame_complexity_limit,
         int boolean_complexity_limit,
         int count_numerical_complexity_limit,
         int distance_numerical_complexity_limit,
@@ -180,6 +189,8 @@ public:
     void set_generate_top_role(bool enable);
     void set_generate_transitive_closure_role(bool enable);
     void set_generate_transitive_reflexive_closure_role(bool enable);
+    void set_generate_primitive_frame_unary(bool enable);
+    void set_generate_primitive_frame_binary(bool enable);
 };
 
 }

@@ -78,6 +78,42 @@ public:
     }
 };
 
+class FrameUnaryVisitor {
+private:
+    const error_handler_type& error_handler;
+    SyntacticElementFactory& context;
+
+public:
+    FrameUnaryVisitor(
+        const error_handler_type& error_handler, SyntacticElementFactory& context)
+        : error_handler(error_handler), context(context) { }
+
+    std::shared_ptr<const core::FrameUnary> result;
+
+    template<typename Node>
+    void operator()(const Node& node) {
+        result = parse(node, error_handler, context);
+    }
+};
+
+class FrameBinaryVisitor {
+private:
+    const error_handler_type& error_handler;
+    SyntacticElementFactory& context;
+
+public:
+    FrameBinaryVisitor(
+        const error_handler_type& error_handler, SyntacticElementFactory& context)
+        : error_handler(error_handler), context(context) { }
+
+    std::shared_ptr<const core::FrameBinary> result;
+
+    template<typename Node>
+    void operator()(const Node& node) {
+        result = parse(node, error_handler, context);
+    }
+};
+
 class ConceptInnerVisitor {
 public:
     ConceptInnerVisitor() { }
@@ -430,6 +466,21 @@ parse(const ast::TransitiveReflexiveClosureRole& node, const error_handler_type&
         parse(node.role, error_handler, context));
 }
 
+std::shared_ptr<const core::FrameUnary>
+parse(const ast::PrimitiveFrameUnary& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+    return context.make_primitive_frame_unary(
+        parse(node.function, error_handler, context),
+        parse(node.pos, error_handler, context));
+}
+
+std::shared_ptr<const core::FrameBinary>
+parse(const ast::PrimitiveFrameBinary& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+    return context.make_primitive_frame_binary(
+        parse(node.function, error_handler, context),
+        parse(node.pos_1, error_handler, context),
+        parse(node.pos_2, error_handler, context));
+}
+
 boost::variant<std::shared_ptr<const core::Concept>, std::shared_ptr<const core::Role>>
 parse(const ast::ConceptOrRole& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     ConceptOrRoleVisitor visitor(error_handler, context);
@@ -448,6 +499,20 @@ parse(const ast::Concept& node, const error_handler_type& error_handler, Syntact
 std::shared_ptr<const core::Role>
 parse(const ast::Role& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     RoleVisitor visitor(error_handler, context);
+    boost::apply_visitor(visitor, node);
+    return visitor.result;
+}
+
+std::shared_ptr<const core::FrameUnary>
+parse(const ast::FrameUnary& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+    FrameUnaryVisitor visitor(error_handler, context);
+    boost::apply_visitor(visitor, node);
+    return visitor.result;
+}
+
+std::shared_ptr<const core::FrameBinary>
+parse(const ast::FrameBinary& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
+    FrameBinaryVisitor visitor(error_handler, context);
     boost::apply_visitor(visitor, node);
     return visitor.result;
 }

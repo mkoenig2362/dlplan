@@ -49,5 +49,7 @@ BOOST_FUSION_ADAPT_STRUCT(dlplan::core::ast::TilCRole, role, concept_)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::ast::TopRole)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::ast::TransitiveClosureRole, role)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::ast::TransitiveReflexiveClosureRole, role)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::core::ast::PrimitiveFrameUnary, function, pos)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::core::ast::PrimitiveFrameBinary, function, pos_1, pos_2)
 
 #endif

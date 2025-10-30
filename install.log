@@ -1,0 +1,16 @@
+Obtaining file:///work/rleap1/marleen.koenig/ba/code/dlplan
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: state_space_generator==0.1.9 in /work/rleap1/marleen.koenig/ba/code/baven/lib/python3.12/site-packages (from dlplan==0.3.29) (0.1.9)
+Requirement already satisfied: cmake>=3.21 in /work/rleap1/marleen.koenig/ba/code/baven/lib/python3.12/site-packages (from dlplan==0.3.29) (4.0.3)
+Building wheels for collected packages: dlplan
+  Building editable for dlplan (pyproject.toml): started
+  Building editable for dlplan (pyproject.toml): still running...
+  Building editable for dlplan (pyproject.toml): finished with status 'canceled'
+ERROR: Operation cancelled by user

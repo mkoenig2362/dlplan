@@ -35,6 +35,16 @@ namespace dlplan::policy
         struct RoleClass;
         struct RoleReferenceClass;
         struct RolesClass;
+        struct FrameUnaryDefinitionClass;
+        struct FrameUnaryImplementationClass;
+        struct FrameUnaryClass;
+        struct FrameUnaryReferenceClass;
+        struct FramesUnaryClass;
+        struct FrameBinaryDefinitionClass;
+        struct FrameBinaryImplementationClass;
+        struct FrameBinaryClass;
+        struct FrameBinaryReferenceClass;
+        struct FramesBinaryClass;
         struct PositiveBooleanConditionClass;
         struct NegativeBooleanConditionClass;
         struct GreaterNumericalConditionClass;
@@ -88,6 +98,18 @@ namespace dlplan::policy
         typedef x3::rule<RoleReferenceClass, ast::RoleReference> role_reference_type;
         typedef x3::rule<RolesClass, ast::Roles> roles_type;
 
+        typedef x3::rule<FrameUnaryDefinitionClass, ast::FrameUnaryDefinition> frame_unary_definition_type;
+        typedef x3::rule<FrameUnaryImplementationClass, ast::FrameUnaryImplementation> frame_unary_implementation_type;
+        typedef x3::rule<FrameUnaryClass, ast::FrameUnary> frame_unary_type;
+        typedef x3::rule<FrameUnaryReferenceClass, ast::FrameUnaryReference> frame_unary_reference_type;
+        typedef x3::rule<FramesUnaryClass, ast::FramesUnary> frames_unary_type;
+
+        typedef x3::rule<FrameBinaryDefinitionClass, ast::FrameBinaryDefinition> frame_binary_definition_type;
+        typedef x3::rule<FrameBinaryImplementationClass, ast::FrameBinaryImplementation> frame_binary_implementation_type;
+        typedef x3::rule<FrameBinaryClass, ast::FrameBinary> frame_binary_type;
+        typedef x3::rule<FrameBinaryReferenceClass, ast::FrameBinaryReference> frame_binary_reference_type;
+        typedef x3::rule<FramesBinaryClass, ast::FramesBinary> frames_binary_type;
+
         typedef x3::rule<PositiveBooleanConditionClass, ast::PositiveBooleanCondition> positive_boolean_condition_type;
         typedef x3::rule<NegativeBooleanConditionClass, ast::NegativeBooleanCondition> negative_boolean_condition_type;
         typedef x3::rule<GreaterNumericalConditionClass, ast::GreaterNumericalCondition> greater_numerical_condition_type;
@@ -122,6 +144,8 @@ namespace dlplan::policy
             numerical_definition_type, numerical_implementation_type, numerical_type, numerical_reference_type, numericals_type,
             concept_definition_type, concept_implementation_type, concept_type, concept_reference_type, concepts_type,
             role_definition_type, role_implementation_type, role_type, role_reference_type, roles_type,
+            frame_unary_definition_type, frame_unary_implementation_type, frame_unary_type, frame_unary_reference_type, frames_unary_type,
+            frame_binary_definition_type, frame_binary_implementation_type, frame_binary_type, frame_binary_reference_type, frames_binary_type,
             positive_boolean_condition_type, negative_boolean_condition_type,
             greater_numerical_condition_type, equal_numerical_condition_type,
             positive_boolean_effect_type, negative_boolean_effect_type, unchanged_boolean_effect_type, greater_concept_condition_type, equal_concept_condition_type,
@@ -157,6 +181,18 @@ namespace dlplan::policy
     parser::role_type const& role();
     parser::role_reference_type const& role_reference();
     parser::roles_type const& roles();
+
+    parser::frame_unary_definition_type const& frame_unary_definition();
+    parser::frame_unary_implementation_type const& frame_unary_implementation();
+    parser::frame_unary_type const& frame_unary();
+    parser::frame_unary_reference_type const& frame_unary_reference();
+    parser::frames_unary_type const& frames_unary();
+
+    parser::frame_binary_definition_type const& frame_binary_definition();
+    parser::frame_binary_implementation_type const& frame_binary_implementation();
+    parser::frame_binary_type const& frame_binary();
+    parser::frame_binary_reference_type const& frame_binary_reference();
+    parser::frames_binary_type const& frames_binary();
 
     parser::positive_boolean_condition_type const& positive_boolean_condition();
     parser::negative_boolean_condition_type const& negative_boolean_condition();

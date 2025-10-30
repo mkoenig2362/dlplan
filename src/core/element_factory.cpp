@@ -93,6 +93,82 @@ std::shared_ptr<const Role> SyntacticElementFactoryImpl::parse_role(SyntacticEle
     return feature;
 }
 
+std::shared_ptr<const FrameUnary> SyntacticElementFactoryImpl::parse_frame_unary(SyntacticElementFactory& parent,
+    const std::string &description, const std::string& filename) {
+    iterator_type iter(description.begin());
+    iterator_type const end(description.end());
+    return parse_frame_unary(parent, iter, end, filename);
+}
+
+std::shared_ptr<const FrameUnary> SyntacticElementFactoryImpl::parse_frame_unary(SyntacticElementFactory& parent,
+    iterator_type& iter, iterator_type end, const std::string& filename) {
+    /* Stage 1 parse */
+    // Our parser
+    using boost::spirit::x3::with;
+
+    // Our error handler
+    error_handler_type error_handler(iter, end, std::cerr, filename);
+    auto const parser =
+        // we pass our error handler to the parser so we can access
+        // it later on in our on_error and on_sucess handlers
+        with<error_handler_tag>(std::ref(error_handler)) [
+            frame_unary_root()
+        ];
+
+    // Our AST
+    ast::FrameUnary ast;
+
+    // Go forth and parse!
+    using boost::spirit::x3::ascii::space;
+    bool success = phrase_parse(iter, end, parser, space, ast);
+    if (!success) {
+        throw std::runtime_error("Failed parse.");
+    }
+
+    /* Stage 2 parse */
+    auto feature = parse(ast, error_handler, parent);
+
+    return feature;
+}
+
+std::shared_ptr<const FrameBinary> SyntacticElementFactoryImpl::parse_frame_binary(SyntacticElementFactory& parent,
+    const std::string &description, const std::string& filename) {
+    iterator_type iter(description.begin());
+    iterator_type const end(description.end());
+    return parse_frame_binary(parent, iter, end, filename);
+}
+
+std::shared_ptr<const FrameBinary> SyntacticElementFactoryImpl::parse_frame_binary(SyntacticElementFactory& parent,
+    iterator_type& iter, iterator_type end, const std::string& filename) {
+    /* Stage 1 parse */
+    // Our parser
+    using boost::spirit::x3::with;
+
+    // Our error handler
+    error_handler_type error_handler(iter, end, std::cerr, filename);
+    auto const parser =
+        // we pass our error handler to the parser so we can access
+        // it later on in our on_error and on_sucess handlers
+        with<error_handler_tag>(std::ref(error_handler)) [
+            frame_binary_root()
+        ];
+
+    // Our AST
+    ast::FrameBinary ast;
+
+    // Go forth and parse!
+    using boost::spirit::x3::ascii::space;
+    bool success = phrase_parse(iter, end, parser, space, ast);
+    if (!success) {
+        throw std::runtime_error("Failed parse.");
+    }
+
+    /* Stage 2 parse */
+    auto feature = parse(ast, error_handler, parent);
+
+    return feature;
+}
+
 std::shared_ptr<const Boolean> SyntacticElementFactoryImpl::parse_boolean(SyntacticElementFactory& parent,
     const std::string &description, const std::string& filename) {
     iterator_type iter(description.begin());
@@ -317,6 +393,14 @@ std::shared_ptr<const Role> SyntacticElementFactoryImpl::make_transitive_reflexi
     return m_cache.get_or_create<TransitiveReflexiveClosureRole>(m_vocabulary_info, role).object;
 }
 
+std::shared_ptr<const FrameUnary> SyntacticElementFactoryImpl::make_primitive_frame_unary(const Function& function, int pos) {
+    return m_cache.get_or_create<PrimitiveFrameUnary>(m_vocabulary_info, function, pos).object;
+}
+
+std::shared_ptr<const FrameBinary> SyntacticElementFactoryImpl::make_primitive_frame_binary(const Function& function, int pos_1, int pos_2) {
+    return m_cache.get_or_create<PrimitiveFrameBinary>(m_vocabulary_info, function, pos_1, pos_2).object;
+}
+
 std::shared_ptr<VocabularyInfo> SyntacticElementFactoryImpl::get_vocabulary_info() const {
     return m_vocabulary_info;
 }
@@ -361,5 +445,7 @@ namespace dlplan {
         , core::TilCRole
         , core::TopRole
         , core::TransitiveClosureRole
-        , core::TransitiveReflexiveClosureRole>;
+        , core::TransitiveReflexiveClosureRole
+        , core::PrimitiveFrameUnary
+        , core::PrimitiveFrameBinary>;
 }

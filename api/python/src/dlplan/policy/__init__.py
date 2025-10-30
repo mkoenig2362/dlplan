@@ -1,4 +1,4 @@
-from _dlplan import NamedBoolean, NamedNumerical, NamedConcept, NamedRole, \
+from _dlplan import NamedBoolean, NamedNumerical, NamedConcept, NamedRole, NamedFrameUnary, NamedFrameBinary, \
     BaseCondition, BaseEffect, Rule, Policy, PolicyFactory, \
     PolicyMinimizer, \
     PositiveBooleanCondition, NegativeBooleanCondition, \

@@ -12,14 +12,14 @@ void PrimitiveRole::compute_result(const State& state, RoleDenotation& result) c
     const auto& atoms = instance_info.get_atoms();
     for (int atom_idx : state.get_atom_indices()) {
         const auto& atom = atoms[atom_idx];
-        if (atom.get_predicate_index() == m_predicate.get_index()) {
+        if (atom.is_predicate() && atom.get_symbol_index() == m_predicate.get_index()) {
             assert(dlplan::utils::in_bounds(m_pos_1, atom.get_object_indices()));
             assert(dlplan::utils::in_bounds(m_pos_2, atom.get_object_indices()));
             result.insert(std::make_pair(atom.get_object_indices()[m_pos_1], atom.get_object_indices()[m_pos_2]));
         }
     }
     for (const auto& atom : state.get_instance_info()->get_static_atoms()) {
-        if (atom.get_predicate_index() == m_predicate.get_index()) {
+        if (atom.is_predicate() && atom.get_symbol_index() == m_predicate.get_index()) {
             assert(dlplan::utils::in_bounds(m_pos_1, atom.get_object_indices()));
             assert(dlplan::utils::in_bounds(m_pos_2, atom.get_object_indices()));
             result.insert(std::make_pair(atom.get_object_indices()[m_pos_1], atom.get_object_indices()[m_pos_2]));

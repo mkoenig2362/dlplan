@@ -35,6 +35,8 @@
 #include "../../include/dlplan/core/elements/roles/top.h"
 #include "../../include/dlplan/core/elements/roles/transitive_closure.h"
 #include "../../include/dlplan/core/elements/roles/transitive_reflexive_closure.h"
+#include "../../include/dlplan/core/elements/frames/primitive_unary.h"
+#include "../../include/dlplan/core/elements/frames/primitive_binary.h"
 
 #include "../../include/dlplan/core.h"
 #include "../../include/dlplan/utils/factory.h"
@@ -84,7 +86,9 @@ private:
         , TilCRole
         , TopRole
         , TransitiveClosureRole
-        , TransitiveReflexiveClosureRole> m_cache;
+        , TransitiveReflexiveClosureRole
+        , PrimitiveFrameUnary
+        , PrimitiveFrameBinary> m_cache;
 
 public:
     SyntacticElementFactoryImpl(std::shared_ptr<VocabularyInfo> vocabulary_info);
@@ -93,6 +97,10 @@ public:
     std::shared_ptr<const Concept> parse_concept(SyntacticElementFactory& parent,
         const std::string &description, const std::string& filename);
     std::shared_ptr<const Role> parse_role(SyntacticElementFactory& parent,
+        const std::string &description, const std::string& filename);
+    std::shared_ptr<const FrameUnary> parse_frame_unary(SyntacticElementFactory& parent,
+        const std::string &description, const std::string& filename);
+    std::shared_ptr<const FrameBinary> parse_frame_binary(SyntacticElementFactory& parent,
         const std::string &description, const std::string& filename);
     std::shared_ptr<const Numerical> parse_numerical(SyntacticElementFactory& parent,
         const std::string &description, const std::string& filename);
@@ -103,6 +111,10 @@ public:
     std::shared_ptr<const Concept> parse_concept(SyntacticElementFactory& parent,
         iterator_type& iter, iterator_type end, const std::string& filename);
     std::shared_ptr<const Role> parse_role(SyntacticElementFactory& parent,
+        iterator_type& iter, iterator_type end, const std::string& filename);
+    std::shared_ptr<const FrameUnary> parse_frame_unary(SyntacticElementFactory& parent,
+        iterator_type& iter, iterator_type end, const std::string& filename);
+    std::shared_ptr<const FrameBinary> parse_frame_binary(SyntacticElementFactory& parent,
         iterator_type& iter, iterator_type end, const std::string& filename);
     std::shared_ptr<const Numerical> parse_numerical(SyntacticElementFactory& parent,
         iterator_type& iter, iterator_type end, const std::string& filename);
@@ -149,6 +161,9 @@ public:
     std::shared_ptr<const Role> make_top_role();
     std::shared_ptr<const Role> make_transitive_closure(const std::shared_ptr<const Role>& role);
     std::shared_ptr<const Role> make_transitive_reflexive_closure(const std::shared_ptr<const Role>& role);
+
+    std::shared_ptr<const FrameUnary> make_primitive_frame_unary(const Function& function, int pos);
+    std::shared_ptr<const FrameBinary> make_primitive_frame_binary(const Function& function, int pos_1, int pos_2);
 
     /**
      * Getters.

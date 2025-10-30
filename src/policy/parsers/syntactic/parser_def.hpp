@@ -70,6 +70,18 @@ namespace dlplan::policy::parser
     role_reference_type const role_reference = "role_reference";
     roles_type const roles = "roles";
 
+    frame_unary_definition_type const frame_unary_definition = "frame_unary_definition";
+    frame_unary_implementation_type const frame_unary_implementation = "frame_unary_implementation";
+    frame_unary_type const frame_unary = "frame_unary";
+    frame_unary_reference_type const frame_unary_reference = "frame_unary_reference";
+    frames_unary_type const frames_unary = "frames_unary";
+
+    frame_binary_definition_type const frame_binary_definition = "frame_binary_definition";
+    frame_binary_implementation_type const frame_binary_implementation = "frame_binary_implementation";
+    frame_binary_type const frame_binary = "frame_binary";
+    frame_binary_reference_type const frame_binary_reference = "frame_binary_reference";
+    frames_binary_type const frames_binary = "frames_binary";
+
     positive_boolean_condition_type const positive_boolean_condition = "positive_boolean_condition";
     negative_boolean_condition_type const negative_boolean_condition = "negative_boolean_condition";
     greater_numerical_condition_type const greater_numerical_condition = "greater_numerical_condition";
@@ -131,6 +143,18 @@ namespace dlplan::policy::parser
     const auto role_reference_def = name;
     const auto roles_def = lit('(') >> lit(":roles") > *role > lit(')');
 
+    const auto frame_unary_definition_def = name;
+    const auto frame_unary_implementation_def = dlplan::core::frame_unary();
+    const auto frame_unary_def = lit('(') > frame_unary_definition > lit('"') > frame_unary_implementation > lit('"') > lit(')');
+    const auto frame_unary_reference_def = name;
+    const auto frames_unary_def = lit('(') >> lit(":frames_uanry") > *frame_unary > lit(')');
+
+    const auto frame_binary_definition_def = name;
+    const auto frame_binary_implementation_def = dlplan::core::frame_binary();
+    const auto frame_binary_def = lit('(') > frame_binary_definition > lit('"') > frame_binary_implementation > lit('"') > lit(')');
+    const auto frame_binary_reference_def = name;
+    const auto frames_binary_def = lit('(') >> lit(":frames_binary") > *frame_binary > lit(')');
+
     const auto positive_boolean_condition_def = lit('(') >> lit(":c_b_pos") > boolean_reference > lit(')');
     const auto negative_boolean_condition_def = lit('(') >> lit(":c_b_neg") > boolean_reference > lit(')');
     const auto greater_numerical_condition_def = lit('(') >> lit(":c_n_gt") > numerical_reference > lit(')');
@@ -175,6 +199,8 @@ namespace dlplan::policy::parser
         > -numericals
         > -concepts
         > -roles
+        > -frames_unary
+        > -frames_binary
         > rules
         > lit(')');
     const auto policy_root_def = policy;
@@ -185,6 +211,8 @@ namespace dlplan::policy::parser
         numerical_definition, numerical_implementation, numerical, numerical_reference, numericals,
         concept_definition, concept_implementation, concept_, concept_reference, concepts,
         role_definition, role_implementation, role, role_reference, roles,
+        frame_unary_definition, frame_unary_implementation, frame_unary, frame_unary_reference, frames_unary,
+        frame_binary_definition, frame_binary_implementation, frame_binary, frame_binary_reference, frames_binary,
         positive_boolean_condition, negative_boolean_condition, greater_numerical_condition, equal_numerical_condition, greater_concept_condition, equal_concept_condition,
         positive_boolean_effect, negative_boolean_effect, unchanged_boolean_effect,
         increment_numerical_effect, increment_or_unchanged_numerical_effect,
@@ -217,6 +245,16 @@ namespace dlplan::policy::parser
     struct RoleClass : x3::annotate_on_success {};
     struct RoleReferenceClass : x3::annotate_on_success {};
     struct RolesClass : x3::annotate_on_success {};
+    struct FrameUnaryDefinitionClass : x3::annotate_on_success {};
+    struct FrameUnaryImplementationClass : x3::annotate_on_success {};
+    struct FrameUnaryClass : x3::annotate_on_success {};
+    struct FrameUnaryReferenceClass : x3::annotate_on_success {};
+    struct FramesUnaryClass : x3::annotate_on_success {};
+    struct FrameBinaryDefinitionClass : x3::annotate_on_success {};
+    struct FrameBinaryImplementationClass : x3::annotate_on_success {};
+    struct FrameBinaryClass : x3::annotate_on_success {};
+    struct FrameBinaryReferenceClass : x3::annotate_on_success {};
+    struct FramesBinaryClass : x3::annotate_on_success {};
     struct PositiveBooleanConditionClass : x3::annotate_on_success {};
     struct NegativeBooleanConditionClass : x3::annotate_on_success {};
     struct GreaterNumericalConditionClass : x3::annotate_on_success {};
@@ -305,6 +343,38 @@ namespace dlplan::policy
     }
     parser::roles_type const& roles() {
         return parser::roles;
+    }
+
+    parser::frame_unary_definition_type const& frame_unary_definition() {
+        return parser::frame_unary_definition;
+    }
+    parser::frame_unary_implementation_type const& frame_unary_implementation() {
+        return parser::frame_unary_implementation;
+    }
+    parser::frame_unary_type const& frame_unary() {
+        return parser::frame_unary;
+    }
+    parser::frame_unary_reference_type const& frame_unary_reference() {
+        return parser::frame_unary_reference;
+    }
+    parser::frames_unary_type const& frames_unary() {
+        return parser::frames_unary;
+    }
+
+    parser::frame_binary_definition_type const& frame_binary_definition() {
+        return parser::frame_binary_definition;
+    }
+    parser::frame_binary_implementation_type const& frame_binary_implementation() {
+        return parser::frame_binary_implementation;
+    }
+    parser::frame_binary_type const& frame_binary() {
+        return parser::frame_binary;
+    }
+    parser::frame_binary_reference_type const& frame_binary_reference() {
+        return parser::frame_binary_reference;
+    }
+    parser::frames_binary_type const& frames_binary() {
+        return parser::frames_binary;
     }
 
     parser::positive_boolean_condition_type const& positive_boolean_condition() {

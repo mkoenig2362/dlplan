@@ -46,7 +46,9 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
       r_til_c(std::make_shared<rules::TilCRole>()),
       r_compose(std::make_shared<rules::ComposeRole>()),
       r_transitive_closure(std::make_shared<rules::TransitiveClosureRole>()),
-      r_transitive_reflexive_closure(std::make_shared<rules::TransitiveReflexiveClosureRole>()) {
+      r_transitive_reflexive_closure(std::make_shared<rules::TransitiveReflexiveClosureRole>()),
+      f_primitive_unary(std::make_shared<rules::PrimitiveFrameUnary>()),
+      f_primitive_binary(std::make_shared<rules::PrimitiveFrameBinary>()) {
     m_primitive_rules.emplace_back(b_nullary);
     m_primitive_rules.emplace_back(c_one_of);
     m_primitive_rules.emplace_back(c_top);
@@ -54,6 +56,8 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
     m_primitive_rules.emplace_back(c_primitive);
     m_primitive_rules.emplace_back(r_top);
     m_primitive_rules.emplace_back(r_primitive);
+    m_primitive_rules.emplace_back(f_primitive_unary);
+    m_primitive_rules.emplace_back(f_primitive_binary);
 
     m_concept_inductive_rules.emplace_back(c_and);
     m_concept_inductive_rules.emplace_back(c_or);
@@ -99,6 +103,7 @@ GeneratedFeatures FeatureGeneratorImpl::generate(
     const core::States& states,
     int concept_complexity_limit,
     int role_complexity_limit,
+    int frame_complexity_limit,
     int boolean_complexity_limit,
     int count_numerical_complexity_limit,
     int distance_numerical_complexity_limit,
@@ -106,8 +111,6 @@ GeneratedFeatures FeatureGeneratorImpl::generate(
     int feature_limit)
 {
     std::cout << "hello" << "\n";
-    std::cout << "\n";
-    std::cout << "\n";
     std::cout << "\n";
     std::cout << "\n";
     std::cout << "\n";
@@ -120,17 +123,18 @@ GeneratedFeatures FeatureGeneratorImpl::generate(
     for (auto& r : m_primitive_rules) r->initialize();
     for (auto& r : m_concept_inductive_rules) r->initialize();
     for (auto& r : m_role_inductive_rules) r->initialize();
+    //for (auto& r : m_frame_inductive_rules) r->initialize();
     for (auto& r : m_boolean_inductive_rules) r->initialize();
     for (auto& r : m_numerical_inductive_rules) r->initialize();
     // Initialize memory to store intermediate results.
-    GeneratorData data(factory, std::max({concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, count_numerical_complexity_limit, distance_numerical_complexity_limit}), time_limit, feature_limit);
+    GeneratorData data(factory, std::max({concept_complexity_limit, role_complexity_limit, frame_complexity_limit, boolean_complexity_limit, count_numerical_complexity_limit, distance_numerical_complexity_limit}), time_limit, feature_limit);
     // Initialize cache.
     core::DenotationsCaches caches;
     generate_base(states, data, caches);
 
     try
     {
-        generate_inductively(states, concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, count_numerical_complexity_limit, distance_numerical_complexity_limit, data, caches);
+        generate_inductively(states, concept_complexity_limit, role_complexity_limit, frame_complexity_limit, boolean_complexity_limit, count_numerical_complexity_limit, distance_numerical_complexity_limit, data, caches);
         //auto x = new char[std::numeric_limits<std::size_t>::max() / 10];
         //x[1] = 1;
     }
@@ -163,13 +167,14 @@ void FeatureGeneratorImpl::generate_inductively(
     const core::States& states,
     int concept_complexity_limit,
     int role_complexity_limit,
+    int frame_complexity_limit,
     int boolean_complexity_limit,
     int count_numerical_complexity_limit,
     int distance_numerical_complexity_limit,
     GeneratorData& data,
     core::DenotationsCaches& caches) {
     utils::g_log << "Started generating composite features. " << std::endl;
-    int max_complexity = std::max({concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, count_numerical_complexity_limit, distance_numerical_complexity_limit});
+    int max_complexity = std::max({concept_complexity_limit, role_complexity_limit, frame_complexity_limit, boolean_complexity_limit, count_numerical_complexity_limit, distance_numerical_complexity_limit});
     for (int target_complexity = 2; target_complexity <= max_complexity; ++target_complexity) {  // every composition adds at least one complexity
         const auto num_features = data.get_num_features();
         if (target_complexity <= concept_complexity_limit) {
@@ -185,6 +190,15 @@ void FeatureGeneratorImpl::generate_inductively(
                 if (data.reached_resource_limit()) break;
                 rule->generate(states, target_complexity, data, caches);
             }
+        }
+        if (target_complexity <= frame_complexity_limit) {
+            if (data.reached_resource_limit()) break;
+            std::cout << "Generating complex frame features";
+            /*TODO::::
+            for (const auto& rule : m_frame_inductive_rules) {
+                if (data.reached_resource_limit()) break;
+                rule->generate(states, target_complexity, data, caches);
+            }*/
         }
         if (target_complexity <= boolean_complexity_limit) {
             if (data.reached_resource_limit()) break;
@@ -217,6 +231,7 @@ void FeatureGeneratorImpl::print_statistics() const {
     for (auto& r : m_primitive_rules) r->print_statistics();
     for (auto& r : m_concept_inductive_rules) r->print_statistics();
     for (auto& r : m_role_inductive_rules) r->print_statistics();
+    //for (auto& r : m_frame_inductive_rules) r->print_statistics();
     for (auto& r : m_boolean_inductive_rules) r->print_statistics();
     for (auto& r : m_numerical_inductive_rules) r->print_statistics();
 }
@@ -345,5 +360,12 @@ void FeatureGeneratorImpl::set_generate_transitive_reflexive_closure_role(bool e
     r_transitive_reflexive_closure->set_enabled(enable);
 }
 
+void FeatureGeneratorImpl::set_generate_primitive_frame_unary(bool enable) {
+    f_primitive_unary->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_primitive_frame_binary(bool enable) {
+    f_primitive_binary->set_enabled(enable);
+}
 
 }

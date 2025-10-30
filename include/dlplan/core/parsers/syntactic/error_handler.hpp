@@ -23,6 +23,8 @@ namespace dlplan::core
             id_map["numerical"] = "Numerical";
             id_map["concept"] = "Concept";
             id_map["role"] = "Role";
+            id_map["FrameUnary"] = "Frame Unary";
+            id_map["FrameBinary"] = "Frame Binary";
             id_map["element"] = "Element";
             id_map["concept_or_role"] = "Concept or Role";
         }

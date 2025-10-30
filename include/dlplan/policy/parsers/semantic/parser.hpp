@@ -41,6 +41,18 @@ extern std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedRole>> 
 extern std::shared_ptr<const dlplan::policy::NamedRole> parse(const ast::RoleReference& node, const dlplan::error_handler_type& error_handler, Context& context);
 extern std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedRole>> parse(const ast::Roles& node, const dlplan::error_handler_type& error_handler, Context& context);
 
+extern std::string parse(const ast::FrameUnaryDefinition& node, const dlplan::error_handler_type& error_handler, Context& context);
+extern std::shared_ptr<const dlplan::core::FrameUnary> parse(const ast::FrameUnaryImplementation& node, const dlplan::error_handler_type& error_handler, Context& context);
+extern std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedFrameUnary>> parse(const ast::FrameUnary& node, const dlplan::error_handler_type& error_handler, Context& context);
+extern std::shared_ptr<const dlplan::policy::NamedFrameUnary> parse(const ast::FrameUnaryReference& node, const dlplan::error_handler_type& error_handler, Context& context);
+extern std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedFrameUnary>> parse(const ast::FramesUnary& node, const dlplan::error_handler_type& error_handler, Context& context);
+
+extern std::string parse(const ast::FrameBinaryDefinition& node, const dlplan::error_handler_type& error_handler, Context& context);
+extern std::shared_ptr<const dlplan::core::FrameBinary> parse(const ast::FrameBinaryImplementation& node, const dlplan::error_handler_type& error_handler, Context& context);
+extern std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedFrameBinary>> parse(const ast::FrameBinary& node, const dlplan::error_handler_type& error_handler, Context& context);
+extern std::shared_ptr<const dlplan::policy::NamedFrameBinary> parse(const ast::FrameBinaryReference& node, const dlplan::error_handler_type& error_handler, Context& context);
+extern std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedFrameBinary>> parse(const ast::FramesBinary& node, const dlplan::error_handler_type& error_handler, Context& context);
+
 extern std::shared_ptr<const BaseCondition> parse(const ast::PositiveBooleanCondition& node, const dlplan::error_handler_type& error_handler, Context& context);
 extern std::shared_ptr<const BaseCondition> parse(const ast::NegativeBooleanCondition& node, const dlplan::error_handler_type& error_handler, Context& context);
 extern std::shared_ptr<const BaseCondition> parse(const ast::GreaterNumericalCondition& node, const dlplan::error_handler_type& error_handler, Context& context);

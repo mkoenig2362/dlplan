@@ -57,6 +57,28 @@ namespace dlplan::policy::parser
         roles_type, iterator_type, context_type)
 
     BOOST_SPIRIT_INSTANTIATE(
+        frame_unary_definition_type, iterator_type, context_type)
+    BOOST_SPIRIT_INSTANTIATE(
+        frame_unary_implementation_type, iterator_type, context_type)
+    BOOST_SPIRIT_INSTANTIATE(
+        frame_unary_type, iterator_type, context_type)
+    BOOST_SPIRIT_INSTANTIATE(
+        frame_unary_reference_type, iterator_type, context_type)
+    BOOST_SPIRIT_INSTANTIATE(
+        frames_unary_type, iterator_type, context_type)
+
+    BOOST_SPIRIT_INSTANTIATE(
+        frame_binary_definition_type, iterator_type, context_type)
+    BOOST_SPIRIT_INSTANTIATE(
+        frame_binary_implementation_type, iterator_type, context_type)
+    BOOST_SPIRIT_INSTANTIATE(
+        frame_binary_type, iterator_type, context_type)
+    BOOST_SPIRIT_INSTANTIATE(
+        frame_binary_reference_type, iterator_type, context_type)
+    BOOST_SPIRIT_INSTANTIATE(
+        frames_binary_type, iterator_type, context_type)
+
+    BOOST_SPIRIT_INSTANTIATE(
         positive_boolean_condition_type, iterator_type, context_type)
     BOOST_SPIRIT_INSTANTIATE(
         negative_boolean_condition_type, iterator_type, context_type)

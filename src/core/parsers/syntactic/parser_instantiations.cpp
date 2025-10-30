@@ -33,4 +33,14 @@ namespace dlplan::core::parser
         role_type, iterator_type, context_type)
     BOOST_SPIRIT_INSTANTIATE(
         role_root_type, iterator_type, context_type)
+
+    BOOST_SPIRIT_INSTANTIATE(
+        frame_unary_type, iterator_type, context_type)
+    BOOST_SPIRIT_INSTANTIATE(
+        frame_unary_root_type, iterator_type, context_type)
+
+    BOOST_SPIRIT_INSTANTIATE(
+        frame_binary_type, iterator_type, context_type)
+    BOOST_SPIRIT_INSTANTIATE(
+        frame_binary_root_type, iterator_type, context_type)
 }

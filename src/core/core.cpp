@@ -29,10 +29,22 @@ namespace std {
     size_t hash<dlplan::core::RoleDenotation>::operator()(const dlplan::core::RoleDenotation& denotation) const {
         return denotation.hash();
     }
+    size_t hash<dlplan::core::FrameUnaryDenotation>::operator()(const dlplan::core::FrameUnaryDenotation& denotation) const {
+        return denotation.hash();
+    }
+    size_t hash<dlplan::core::FrameBinaryDenotation>::operator()(const dlplan::core::FrameBinaryDenotation& denotation) const {
+        return denotation.hash();
+    }
     size_t hash<dlplan::core::ConceptDenotations>::operator()(const dlplan::core::ConceptDenotations& denotations) const {
         return dlplan::hash_vector(denotations);
     }
     size_t hash<dlplan::core::RoleDenotations>::operator()(const dlplan::core::RoleDenotations& denotations) const {
+        return dlplan::hash_vector(denotations);
+    }
+    size_t hash<dlplan::core::FrameUnaryDenotations>::operator()(const dlplan::core::FrameUnaryDenotations& denotations) const {
+        return dlplan::hash_vector(denotations);
+    }
+    size_t hash<dlplan::core::FrameBinaryDenotations>::operator()(const dlplan::core::FrameBinaryDenotations& denotations) const {
         return dlplan::hash_vector(denotations);
     }
     size_t hash<dlplan::core::DenotationsCacheKey>::operator()(const dlplan::core::DenotationsCacheKey& key) const {
@@ -87,6 +99,26 @@ std::shared_ptr<const Role> SyntacticElementFactory::parse_role(
 std::shared_ptr<const Role> SyntacticElementFactory::parse_role(
     iterator_type& iter, iterator_type end, const std::string& filename) {
     return m_pImpl->parse_role(*this, iter, end, filename);
+}
+
+std::shared_ptr<const FrameUnary> SyntacticElementFactory::parse_frame_unary(
+    const std::string &description, const std::string& filename) {
+    return m_pImpl->parse_frame_unary(*this, description, filename);
+}
+
+std::shared_ptr<const FrameUnary> SyntacticElementFactory::parse_frame_unary(
+    iterator_type& iter, iterator_type end, const std::string& filename) {
+    return m_pImpl->parse_frame_unary(*this, iter, end, filename);
+}
+
+std::shared_ptr<const FrameBinary> SyntacticElementFactory::parse_frame_binary(
+    const std::string &description, const std::string& filename) {
+    return m_pImpl->parse_frame_binary(*this, description, filename);
+}
+
+std::shared_ptr<const FrameBinary> SyntacticElementFactory::parse_frame_binary(
+    iterator_type& iter, iterator_type end, const std::string& filename) {
+    return m_pImpl->parse_frame_binary(*this, iter, end, filename);
 }
 
 std::shared_ptr<const Boolean> SyntacticElementFactory::parse_boolean(
@@ -258,9 +290,20 @@ std::shared_ptr<const Role>SyntacticElementFactory::make_transitive_reflexive_cl
     return m_pImpl->make_transitive_reflexive_closure(role);
 }
 
+std::shared_ptr<const FrameUnary>SyntacticElementFactory::make_primitive_frame_unary(const Function& function, int pos) {
+    return m_pImpl->make_primitive_frame_unary(function, pos);
+}
+
+std::shared_ptr<const FrameBinary>SyntacticElementFactory::make_primitive_frame_binary(const Function& function, int pos_1, int pos_2) {
+    return m_pImpl->make_primitive_frame_binary(function, pos_1, pos_2);
+}
+
+
 // Explicit template instantiations
 template class Element<ConceptDenotation, ConceptDenotations>;
 template class Element<RoleDenotation, RoleDenotations>;
+template class Element<FrameUnaryDenotation, FrameUnaryDenotations>;
+template class Element<FrameBinaryDenotation, FrameBinaryDenotations>;
 template class ElementLight<bool, BooleanDenotations>;
 template class ElementLight<int, NumericalDenotations>;
 }
@@ -269,10 +312,14 @@ namespace dlplan {
 template class SharedObjectCache<core::DenotationsCacheKey,
     core::ConceptDenotation,
     core::RoleDenotation,
+    core::FrameUnaryDenotation,
+    core::FrameBinaryDenotation,
     bool,
     int,
     core::ConceptDenotations,
     core::RoleDenotations,
+    core::FrameUnaryDenotations,
+    core::FrameBinaryDenotations,
     core::BooleanDenotations,
     core::NumericalDenotations>;
 }

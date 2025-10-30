@@ -22,6 +22,8 @@ private:
         , NamedNumerical
         , NamedConcept
         , NamedRole
+        , NamedFrameUnary
+        , NamedFrameBinary
         , PositiveBooleanCondition
         , NegativeBooleanCondition
         , GreaterNumericalCondition
@@ -63,6 +65,8 @@ public:
     std::shared_ptr<const NamedNumerical> make_numerical(const std::string& key, const std::shared_ptr<const core::Numerical>& numerical);
     std::shared_ptr<const NamedConcept> make_concept(const std::string& key, const std::shared_ptr<const core::Concept>& concept_);
     std::shared_ptr<const NamedRole> make_role(const std::string& key, const std::shared_ptr<const core::Role>& role);
+    std::shared_ptr<const NamedFrameUnary> make_frame_unary(const std::string& key, const std::shared_ptr<const core::FrameUnary>& frame_unary);
+    std::shared_ptr<const NamedFrameBinary> make_frame_binary(const std::string& key, const std::shared_ptr<const core::FrameBinary>& frame_binary);
 
     std::shared_ptr<const BaseCondition> make_pos_condition(const std::shared_ptr<const NamedBoolean>& boolean);
     std::shared_ptr<const BaseCondition> make_neg_condition(const std::shared_ptr<const NamedBoolean>& boolean);

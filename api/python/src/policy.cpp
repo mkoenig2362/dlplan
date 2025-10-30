@@ -40,6 +40,18 @@ void init_policy(py::module_ &m_policy) {
         .def("get_element", &policy::NamedRole::get_element)
     ;
 
+    py::class_<policy::NamedFrameUnary, std::shared_ptr<policy::NamedFrameUnary>>(m_policy, "NamedFrameUnary")
+        .def("__str__", py::overload_cast<>(&policy::NamedFrameUnary::str, py::const_))
+        .def("get_key", &policy::NamedFrameUnary::get_key)
+        .def("get_element", &policy::NamedFrameUnary::get_element)
+    ;
+
+    py::class_<policy::NamedFrameBinary, std::shared_ptr<policy::NamedFrameBinary>>(m_policy, "NamedFrameBinary")
+        .def("__str__", py::overload_cast<>(&policy::NamedFrameBinary::str, py::const_))
+        .def("get_key", &policy::NamedFrameBinary::get_key)
+        .def("get_element", &policy::NamedFrameBinary::get_element)
+    ;
+
     py::class_<policy::BaseCondition, std::shared_ptr<policy::BaseCondition>>(m_policy, "BaseCondition")
         .def("__str__", py::overload_cast<>(&policy::BaseCondition::str, py::const_))
         .def("evaluate", py::overload_cast<const core::State&>(&policy::BaseCondition::evaluate, py::const_))
@@ -135,6 +147,8 @@ void init_policy(py::module_ &m_policy) {
         .def("make_numerical", &policy::PolicyFactory::make_numerical)
         .def("make_concept", &policy::PolicyFactory::make_concept)
         .def("make_role", &policy::PolicyFactory::make_role)
+        .def("make_frame_unary", &policy::PolicyFactory::make_frame_unary)
+        .def("make_frame_binary", &policy::PolicyFactory::make_frame_binary)
 
         .def("make_pos_condition", &policy::PolicyFactory::make_pos_condition)
         .def("make_neg_condition", &policy::PolicyFactory::make_neg_condition)

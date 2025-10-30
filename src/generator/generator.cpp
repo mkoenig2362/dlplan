@@ -32,13 +32,14 @@ GeneratedFeatures FeatureGenerator::generate(
     const core::States& states,
     int concept_complexity_limit,
     int role_complexity_limit,
+    int frame_complexity_limit,
     int boolean_complexity_limit,
     int count_numerical_complexity_limit,
     int distance_numerical_complexity_limit,
     int time_limit,
     int feature_limit)
 {
-    return m_pImpl->generate(factory, states, concept_complexity_limit, role_complexity_limit, boolean_complexity_limit, count_numerical_complexity_limit, distance_numerical_complexity_limit, time_limit, feature_limit);
+    return m_pImpl->generate(factory, states, concept_complexity_limit, role_complexity_limit, frame_complexity_limit, boolean_complexity_limit, count_numerical_complexity_limit, distance_numerical_complexity_limit, time_limit, feature_limit);
 }
 
 void FeatureGenerator::set_generate_empty_boolean(bool enable) {
@@ -165,11 +166,20 @@ void FeatureGenerator::set_generate_transitive_reflexive_closure_role(bool enabl
     m_pImpl->set_generate_transitive_reflexive_closure_role(enable);
 }
 
+void FeatureGenerator::set_generate_primitive_frame_unary(bool enable) {
+    m_pImpl->set_generate_primitive_frame_unary(enable);
+}
+
+void FeatureGenerator::set_generate_primitive_frame_binary(bool enable) {
+    m_pImpl->set_generate_primitive_frame_binary(enable);
+}
+
 GeneratedFeatures generate_features(
     core::SyntacticElementFactory& factory,
     const core::States& states,
     int concept_complexity_limit,
     int role_complexity_limit,
+    int frame_complexity_limit,
     int boolean_complexity_limit,
     int count_numerical_complexity_limit,
     int distance_numerical_complexity_limit,
@@ -205,7 +215,9 @@ GeneratedFeatures generate_features(
     bool generate_til_c_role,
     bool generate_top_role,
     bool generate_transitive_closure_role,
-    bool generate_transitive_reflexive_closure_role) {
+    bool generate_transitive_reflexive_closure_role,
+    bool generate_primitive_frame_unary,
+    bool generate_primitive_frame_binary) {
     FeatureGeneratorImpl generator = FeatureGeneratorImpl();
     generator.set_generate_empty_boolean(generate_empty_boolean);
     generator.set_generate_inclusion_boolean(generate_inclusion_boolean);
@@ -238,8 +250,11 @@ GeneratedFeatures generate_features(
     generator.set_generate_top_role(generate_top_role);
     generator.set_generate_transitive_closure_role(generate_transitive_closure_role);
     generator.set_generate_transitive_reflexive_closure_role(generate_transitive_reflexive_closure_role);
+    generator.set_generate_primitive_frame_unary(generate_primitive_frame_unary);
+    generator.set_generate_primitive_frame_binary(generate_primitive_frame_binary);
     return generator.generate(factory, states, concept_complexity_limit,
         role_complexity_limit,
+        frame_complexity_limit,
         boolean_complexity_limit,
         count_numerical_complexity_limit,
         distance_numerical_complexity_limit,

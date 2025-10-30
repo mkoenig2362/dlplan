@@ -16,14 +16,18 @@ namespace dlplan::core
         struct NumericalRootClass;
         struct ConceptRootClass;
         struct RoleRootClass;
+        struct FrameUnaryRootClass;
+        struct FrameBinaryRootClass;
 
         typedef x3::rule<ElementRootClass, ast::Element> element_root_type;
         typedef x3::rule<BooleanRootClass, ast::Boolean> boolean_root_type;
         typedef x3::rule<NumericalRootClass, ast::Numerical> numerical_root_type;
         typedef x3::rule<ConceptRootClass, ast::Concept> concept_root_type;
         typedef x3::rule<RoleRootClass, ast::Role> role_root_type;
+        typedef x3::rule<FrameUnaryRootClass, ast::FrameUnary> frame_unary_root_type;
+        typedef x3::rule<FrameBinaryRootClass, ast::FrameBinary> frame_binary_root_type;
 
-        BOOST_SPIRIT_DECLARE(element_root_type, boolean_root_type, numerical_root_type, concept_root_type, role_root_type)
+        BOOST_SPIRIT_DECLARE(element_root_type, boolean_root_type, numerical_root_type, concept_root_type, role_root_type, frame_unary_root_type, frame_binary_root_type)
     }
 
     parser::element_root_type const& element_root();
@@ -31,6 +35,8 @@ namespace dlplan::core
     parser::numerical_root_type const& numerical_root();
     parser::concept_root_type const& concept_root();
     parser::role_root_type const& role_root();
+    parser::frame_unary_root_type const& frame_unary_root();
+    parser::frame_binary_root_type const& frame_binary_root();
 }
 
 #endif

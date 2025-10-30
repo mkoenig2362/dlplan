@@ -93,6 +93,22 @@ std::shared_ptr<const NamedRole> PolicyFactoryImpl::make_role(const std::string&
     return result.object;
 }
 
+std::shared_ptr<const NamedFrameUnary> PolicyFactoryImpl::make_frame_unary(const std::string& key, const std::shared_ptr<const core::FrameUnary>& frame_unary) {
+    auto result = m_cache.get_or_create<NamedFrameUnary>(key, frame_unary);
+    if (!result.created && (result.object->get_element() != frame_unary)) {
+        throw std::runtime_error("Failed to make unary frame because a different frame with the same key already exists.");
+    }
+    return result.object;
+}
+
+std::shared_ptr<const NamedFrameBinary> PolicyFactoryImpl::make_frame_binary(const std::string& key, const std::shared_ptr<const core::FrameBinary>& frame_binary) {
+    auto result = m_cache.get_or_create<NamedFrameBinary>(key, frame_binary);
+    if (!result.created && (result.object->get_element() != frame_binary)) {
+        throw std::runtime_error("Failed to make binary frame because a different frame with the same key already exists.");
+    }
+    return result.object;
+}
+
 std::shared_ptr<const BaseCondition> PolicyFactoryImpl::make_pos_condition(const std::shared_ptr<const NamedBoolean>& boolean) {
     return m_cache.get_or_create<PositiveBooleanCondition>(boolean).object;
 }
@@ -197,6 +213,8 @@ template class ReferenceCountedObjectFactory<policy::NamedBoolean
         , policy::NamedNumerical
         , policy::NamedConcept
         , policy::NamedRole
+        , policy::NamedFrameUnary
+        , policy::NamedFrameBinary
         , policy::PositiveBooleanCondition
         , policy::NegativeBooleanCondition
         , policy::GreaterNumericalCondition

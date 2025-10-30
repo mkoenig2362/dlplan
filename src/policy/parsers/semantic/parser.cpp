@@ -212,6 +212,96 @@ std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedRole>
     return roles;
 }
 
+std::string parse(
+    const ast::FrameUnaryDefinition& node, const dlplan::error_handler_type& error_handler, Context& context) {
+    const auto key = parse(node.key, error_handler, context);
+    auto it = context.frames_unary.find(key);
+    if (it != context.frames_unary.end()) {
+        error_handler(node, "Multiple definitions of unary frame " + key);
+        error_handler(it->second.node, "Previous definition: ");
+        throw std::runtime_error("Failed parse.");
+    }
+    return key;
+}
+std::shared_ptr<const dlplan::core::FrameUnary> parse(
+    const ast::FrameUnaryImplementation& node, const dlplan::error_handler_type& error_handler, Context& context) {
+    return dlplan::core::parse(node.frame_unary, error_handler, *context.policy_factory.get_element_factory());
+}
+
+std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedFrameUnary>> parse(
+    const ast::FrameUnary& node, const error_handler_type& error_handler, Context& context) {
+    const auto definition = parse(node.definition, error_handler, context);
+    const auto implementation = parse(node.implementation, error_handler, context);
+    auto named_frame_unary = context.policy_factory.make_frame_unary(definition, implementation);
+    context.frames_unary.emplace(definition, NamedFrameUnaryData{ node.definition, named_frame_unary });
+    return {definition, named_frame_unary};
+}
+
+std::shared_ptr<const dlplan::policy::NamedFrameUnary> parse(
+    const ast::FrameUnaryReference& node, const error_handler_type& error_handler, Context& context) {
+    auto key = parse(node.key, error_handler, context);
+    auto it = context.frames_unary.find(key);
+    if (it == context.frames_unary.end()) {
+        error_handler(node, "Undefined unary frame " + key);
+        throw std::runtime_error("Failed parse.");
+    }
+    return it->second.result;
+}
+
+std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedFrameUnary>> parse(
+    const ast::FramesUnary& node, const error_handler_type& error_handler, Context& context) {
+    std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedFrameUnary>> frames_unary;
+    for (const auto& child : node.definitions) {
+        frames_unary.insert(parse(child, error_handler, context));
+    }
+    return frames_unary;
+}
+
+std::string parse(
+    const ast::FrameBinaryDefinition& node, const dlplan::error_handler_type& error_handler, Context& context) {
+    const auto key = parse(node.key, error_handler, context);
+    auto it = context.frames_binary.find(key);
+    if (it != context.frames_binary.end()) {
+        error_handler(node, "Multiple definitions of binary frame " + key);
+        error_handler(it->second.node, "Previous definition: ");
+        throw std::runtime_error("Failed parse.");
+    }
+    return key;
+}
+std::shared_ptr<const dlplan::core::FrameBinary> parse(
+    const ast::FrameBinaryImplementation& node, const dlplan::error_handler_type& error_handler, Context& context) {
+    return dlplan::core::parse(node.frame_binary, error_handler, *context.policy_factory.get_element_factory());
+}
+
+std::pair<std::string, std::shared_ptr<const dlplan::policy::NamedFrameBinary>> parse(
+    const ast::FrameBinary& node, const error_handler_type& error_handler, Context& context) {
+    const auto definition = parse(node.definition, error_handler, context);
+    const auto implementation = parse(node.implementation, error_handler, context);
+    auto named_frame_binary = context.policy_factory.make_frame_binary(definition, implementation);
+    context.frames_binary.emplace(definition, NamedFrameBinaryData{ node.definition, named_frame_binary });
+    return {definition, named_frame_binary};
+}
+
+std::shared_ptr<const dlplan::policy::NamedFrameBinary> parse(
+    const ast::FrameBinaryReference& node, const error_handler_type& error_handler, Context& context) {
+    auto key = parse(node.key, error_handler, context);
+    auto it = context.frames_binary.find(key);
+    if (it == context.frames_binary.end()) {
+        error_handler(node, "Undefined binary frame " + key);
+        throw std::runtime_error("Failed parse.");
+    }
+    return it->second.result;
+}
+
+std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedFrameBinary>> parse(
+    const ast::FramesBinary& node, const error_handler_type& error_handler, Context& context) {
+    std::unordered_map<std::string, std::shared_ptr<const dlplan::policy::NamedFrameBinary>> frames_binary;
+    for (const auto& child : node.definitions) {
+        frames_binary.insert(parse(child, error_handler, context));
+    }
+    return frames_binary;
+}
+
 std::shared_ptr<const BaseCondition> parse(
     const ast::PositiveBooleanCondition& node, const error_handler_type& error_handler, Context& context) {
     return context.policy_factory.make_pos_condition(parse(node.reference, error_handler, context));

@@ -22,6 +22,8 @@
 namespace dlplan::core {
 class ConceptDenotation;
 class RoleDenotation;
+class FrameUnaryDenotation;
+class FrameBinaryDenotation;
 class DenotationsCaches;
 struct DenotationsCacheKey;
 class Constant;
@@ -37,6 +39,8 @@ class SyntacticElementFactoryImpl;
 
 using ConceptDenotations = std::vector<std::shared_ptr<const ConceptDenotation>>;
 using RoleDenotations = std::vector<std::shared_ptr<const RoleDenotation>>;
+using FrameUnaryDenotations = std::vector<std::shared_ptr<const FrameUnaryDenotation>>;
+using FrameBinaryDenotations = std::vector<std::shared_ptr<const FrameBinaryDenotation>>;
 using BooleanDenotations = std::vector<bool>;
 using NumericalDenotations = std::vector<int>;
 
@@ -54,7 +58,9 @@ using PairOfObjectIndices = std::pair<ObjectIndex, ObjectIndex>;
 using PairsOfObjectIndices = std::vector<PairOfObjectIndices>;
 
 using AtomIndex = int;
+using AtomValue = float;
 using AtomIndices = std::vector<AtomIndex>;
+using AtomValues = std::vector<AtomValue>;
 
 using ElementIndex = int;
 
@@ -98,12 +104,28 @@ namespace std {
         size_t operator()(const dlplan::core::RoleDenotation& denotation) const;
     };
     template<>
+    struct hash<dlplan::core::FrameUnaryDenotation> {
+        size_t operator()(const dlplan::core::FrameUnaryDenotation& denotation) const;
+    };
+    template<>
+    struct hash<dlplan::core::FrameBinaryDenotation> {
+        size_t operator()(const dlplan::core::FrameBinaryDenotation& denotation) const;
+    };
+    template<>
     struct hash<dlplan::core::ConceptDenotations> {
         size_t operator()(const dlplan::core::ConceptDenotations& denotations) const;
     };
     template<>
     struct hash<dlplan::core::RoleDenotations> {
         size_t operator()(const dlplan::core::RoleDenotations& denotations) const;
+    };
+    template<>
+    struct hash<dlplan::core::FrameUnaryDenotations> {
+        size_t operator()(const dlplan::core::FrameUnaryDenotations& denotations) const;
+    };
+    template<>
+    struct hash<dlplan::core::FrameBinaryDenotations> {
+        size_t operator()(const dlplan::core::FrameBinaryDenotations& denotations) const;
     };
     template<>
     struct hash<dlplan::core::DenotationsCacheKey> {
@@ -213,6 +235,100 @@ public:
     int get_num_objects() const;
 };
 
+
+/// @brief Encapsulates the result of the evaluation of a unary frame on a state
+///        and provides functionality to access and modify it.
+///
+/// The result of an evaluation of a unary frame is a set of pairs of object indices.
+/// The set of pairs of object indices represent the elements in the binary
+/// relation of the unary frame that are true in a given state. Each object index
+/// refers to an object of a common instance info.
+class FrameUnaryDenotation : public Base<FrameUnaryDenotation> {
+private:
+    int m_num_objects;
+    std::vector<double> m_data;
+
+public:
+    explicit FrameUnaryDenotation(int num_objects);
+    FrameUnaryDenotation(const FrameUnaryDenotation& other);
+    FrameUnaryDenotation& operator=(const FrameUnaryDenotation& other);
+    FrameUnaryDenotation(FrameUnaryDenotation&& other);
+    FrameUnaryDenotation& operator=(FrameUnaryDenotation&& other);
+    ~FrameUnaryDenotation();
+
+    double get_value(ObjectIndex index) const;
+    void set_value(ObjectIndex index, double value);
+
+    bool are_equal_impl(const FrameUnaryDenotation& other) const;
+    void str_impl(std::stringstream& out) const;
+    std::size_t hash_impl() const;
+
+    bool contains(ObjectIndex index) const;
+    void insert(ObjectIndex index, double value);
+
+    int size() const;
+    bool empty() const;
+    bool intersects(const FrameUnaryDenotation& other) const;
+    bool is_subset_of(const FrameUnaryDenotation& other) const;
+
+    /// @brief Compute a vector representation of this frame denotation.
+    /// @return A vector of pairs of object indices.
+    ObjectIndices to_vector() const;
+
+    /// @brief Compute a sorted vector representation of this frame denotation.
+    /// @return A vector of pairs of object indices in ascending order by first then second element.
+    ObjectIndices to_sorted_vector() const;
+
+    int get_num_objects() const;
+};
+
+
+/// @brief Encapsulates the result of the evaluation of a binary frame on a state
+///        and provides functionality to access and modify it.
+///
+/// The result of an evaluation of a binary frame is a set of pairs of object indices.
+/// The set of pairs of object indices represent the elements in the binary
+/// relation of the binary frame that are true in a given state. Each object index
+/// refers to an object of a common instance info.
+class FrameBinaryDenotation : public Base<FrameBinaryDenotation> {
+private:
+    int m_num_objects;
+    std::vector<double> m_data;
+
+public:
+    explicit FrameBinaryDenotation(int num_objects);
+    FrameBinaryDenotation(const FrameBinaryDenotation& other);
+    FrameBinaryDenotation& operator=(const FrameBinaryDenotation& other);
+    FrameBinaryDenotation(FrameBinaryDenotation&& other);
+    FrameBinaryDenotation& operator=(FrameBinaryDenotation&& other);
+    ~FrameBinaryDenotation();
+
+    double get_value(const PairOfObjectIndices& indices) const;
+    void set_value(const PairOfObjectIndices& indices, double value);
+
+    bool are_equal_impl(const FrameBinaryDenotation& other) const ;
+    void str_impl(std::stringstream& out) const;
+    std::size_t hash_impl() const;
+
+    bool contains(const PairOfObjectIndices& indices) const;
+    void insert(const PairOfObjectIndices& indices, double value);
+
+    int size() const;
+    bool empty() const;
+    bool intersects(const FrameBinaryDenotation& other) const;
+    bool is_subset_of(const FrameBinaryDenotation& other) const;
+
+    /// @brief Compute a vector representation of this frame denotation.
+    /// @return A vector of pairs of object indices.
+    PairsOfObjectIndices to_vector() const;
+
+    /// @brief Compute a sorted vector representation of this frame denotation.
+    /// @return A vector of pairs of object indices in ascending order by first then second element.
+    PairsOfObjectIndices to_sorted_vector() const;
+
+    int get_num_objects() const;
+};
+
 /// @brief Encapsulates a key to store and retrieve denotations from the cache.
 struct DenotationsCacheKey {
     ElementIndex element;
@@ -241,10 +357,14 @@ public:
     SharedObjectCache<DenotationsCacheKey,
         ConceptDenotation,
         RoleDenotation,
+        FrameUnaryDenotation,
+        FrameBinaryDenotation,
         bool,
         int,
         ConceptDenotations,
         RoleDenotations,
+        FrameUnaryDenotations,
+        FrameBinaryDenotations,
         BooleanDenotations,
         NumericalDenotations> data;
 };
@@ -469,6 +589,8 @@ public:
     PredicateIndex get_predicate_index() const; //keep for now, downward compability??
     const ObjectIndices& get_object_indices() const;
     bool is_static() const;
+    bool is_function() const;
+    bool is_predicate() const;
 };
 
 
@@ -560,11 +682,15 @@ class State : public Base<State> {
 private:
     std::shared_ptr<InstanceInfo> m_instance_info;
     AtomIndices m_atom_indices;
+    AtomValues m_atom_values;
 
 public:
     State(StateIndex index, std::shared_ptr<InstanceInfo> instance_info, const std::vector<Atom>& atoms);
     State(StateIndex index, std::shared_ptr<InstanceInfo> instance_info, const AtomIndices& atom_indices);
     State(StateIndex index, std::shared_ptr<InstanceInfo> instance_info, AtomIndices&& atom_indices);
+    State(StateIndex index, std::shared_ptr<InstanceInfo> instance_info, const std::vector<Atom>& atoms, const AtomValues& atom_values);
+    State(StateIndex index, std::shared_ptr<InstanceInfo> instance_info, const AtomIndices& atom_indices, const AtomValues& atom_values);
+    State(StateIndex index, std::shared_ptr<InstanceInfo> instance_info, AtomIndices&& atom_indices, AtomValues&& atom_values);
     State(const State& other);
     State& operator=(const State& other);
     State(State&& other);
@@ -577,6 +703,8 @@ public:
 
     std::shared_ptr<InstanceInfo> get_instance_info() const;
     const AtomIndices& get_atom_indices() const;
+    const AtomValues& get_atom_values() const;
+    double value_of(int atom_id) const;
 };
 
 
@@ -710,6 +838,14 @@ using Concept = Element<ConceptDenotation, ConceptDenotations>;
 ///        on a given state. It can also make use of a cache during evaluation.
 using Role = Element<RoleDenotation, RoleDenotations>;
 
+/// @brief Represents a frame element that evaluates to a frame denotation
+///        on a given state. It can also make use of a cache during evaluation.
+using FrameUnary = Element<FrameUnaryDenotation, FrameUnaryDenotations>;
+
+/// @brief Represents a frame element that evaluates to a frame denotation
+///        on a given state. It can also make use of a cache during evaluation.
+using FrameBinary = Element<FrameBinaryDenotation, FrameBinaryDenotations>;
+
 /// @brief Represents a Boolean element that evaluates to either true or false
 ///        on a given state. It can also make use of a cache during evaluation.
 using Boolean = ElementLight<bool, BooleanDenotations>;
@@ -752,6 +888,26 @@ public:
         const std::string &description, const std::string& filename="");
 
     std::shared_ptr<const Role> parse_role(
+        iterator_type& iter, iterator_type end, const std::string& filename="");
+
+    /**
+     * Returns a unary Frame if the description is correct.
+     * If description is incorrect, throw an error with human readable information.
+     */
+    std::shared_ptr<const FrameUnary> parse_frame_unary(
+        const std::string &description, const std::string& filename="");
+
+    std::shared_ptr<const FrameUnary> parse_frame_unary(
+        iterator_type& iter, iterator_type end, const std::string& filename="");
+
+    /**
+     * Returns a binary Frame if the description is correct.
+     * If description is incorrect, throw an error with human readable information.
+     */
+    std::shared_ptr<const FrameBinary> parse_frame_binary(
+        const std::string &description, const std::string& filename="");
+
+    std::shared_ptr<const FrameBinary> parse_frame_binary(
         iterator_type& iter, iterator_type end, const std::string& filename="");
 
     /**
@@ -814,6 +970,9 @@ public:
     std::shared_ptr<const Role> make_top_role();
     std::shared_ptr<const Role> make_transitive_closure(const std::shared_ptr<const Role>& role);
     std::shared_ptr<const Role> make_transitive_reflexive_closure(const std::shared_ptr<const Role>& role);
+
+    std::shared_ptr<const FrameUnary> make_primitive_frame_unary(const Function& function, int pos);
+    std::shared_ptr<const FrameBinary> make_primitive_frame_binary(const Function& function, int pos_1, int pos_2);
 };
 
 }

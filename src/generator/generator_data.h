@@ -18,10 +18,14 @@ struct GeneratorData {
     std::unordered_set<std::shared_ptr<const core::NumericalDenotations>> m_numerical_hash_table;
     std::unordered_set<std::shared_ptr<const core::ConceptDenotations>> m_concept_hash_table;
     std::unordered_set<std::shared_ptr<const core::RoleDenotations>> m_role_hash_table;
+    std::unordered_set<std::shared_ptr<const core::FrameUnaryDenotations>> m_frame_unary_hash_table;
+    std::unordered_set<std::shared_ptr<const core::FrameBinaryDenotations>> m_frame_binary_hash_table;
     std::vector<std::vector<std::shared_ptr<const core::Boolean>>> m_booleans_by_iteration;
     std::vector<std::vector<std::shared_ptr<const core::Numerical>>> m_numericals_by_iteration;
     std::vector<std::vector<std::shared_ptr<const core::Concept>>> m_concepts_by_iteration;
     std::vector<std::vector<std::shared_ptr<const core::Role>>> m_roles_by_iteration;
+    std::vector<std::vector<std::shared_ptr<const core::FrameUnary>>> m_frames_unary_by_iteration;
+    std::vector<std::vector<std::shared_ptr<const core::FrameBinary>>> m_frames_binary_by_iteration;
     GeneratedFeatures m_generated_features;
 
     // resource constraints
@@ -40,18 +44,22 @@ struct GeneratorData {
         m_numericals_by_iteration(std::vector<std::vector<std::shared_ptr<const core::Numerical>>>(complexity + 1)),
         m_concepts_by_iteration(std::vector<std::vector<std::shared_ptr<const core::Concept>>>(complexity + 1)),
         m_roles_by_iteration(std::vector<std::vector<std::shared_ptr<const core::Role>>>(complexity + 1)),
+        m_frames_unary_by_iteration(std::vector<std::vector<std::shared_ptr<const core::FrameUnary>>>(complexity + 1)),
+        m_frames_binary_by_iteration(std::vector<std::vector<std::shared_ptr<const core::FrameBinary>>>(complexity + 1)),
         m_complexity(complexity),
         m_time_limit(time_limit),
         m_feature_limit(feature_limit),
         m_timer(time_limit) { }
 
     int get_num_features() {
-      return std::get<0>(m_generated_features).size() + std::get<1>(m_generated_features).size() + std::get<2>(m_generated_features).size() + std::get<3>(m_generated_features).size();
+      return std::get<0>(m_generated_features).size() + std::get<1>(m_generated_features).size() + std::get<2>(m_generated_features).size() + std::get<3>(m_generated_features).size() + std::get<4>(m_generated_features).size() + std::get<5>(m_generated_features).size();
     }
 
     void print_statistics() const {
       utils::g_log << "Total concept elements: " << std::accumulate(m_concepts_by_iteration.begin(), m_concepts_by_iteration.end(), 0, [&](int current_sum, const auto& e){ return current_sum + e.size(); }) << std::endl
                    << "Total role elements: " << std::accumulate(m_roles_by_iteration.begin(), m_roles_by_iteration.end(), 0, [&](int current_sum, const auto& e){ return current_sum + e.size(); }) << std::endl
+                   << "Total unary frame elements: " << std::accumulate(m_frames_unary_by_iteration.begin(), m_frames_unary_by_iteration.end(), 0, [&](int current_sum, const auto& e){ return current_sum + e.size(); }) << std::endl
+                   << "Total binary frame elements: " << std::accumulate(m_frames_binary_by_iteration.begin(), m_frames_binary_by_iteration.end(), 0, [&](int current_sum, const auto& e){ return current_sum + e.size(); }) << std::endl
                    << "Total numerical elements: " << std::accumulate(m_numericals_by_iteration.begin(), m_numericals_by_iteration.end(), 0, [&](int current_sum, const auto& e){ return current_sum + e.size(); }) << std::endl
                    << "Total boolean elements: " << std::accumulate(m_booleans_by_iteration.begin(), m_booleans_by_iteration.end(), 0, [&](int current_sum, const auto& e){ return current_sum + e.size(); }) << std::endl;
     }

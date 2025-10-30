@@ -19,7 +19,9 @@ using GeneratedFeatures = std::tuple<
     std::vector<std::shared_ptr<const core::Boolean>>,
     std::vector<std::shared_ptr<const core::Numerical>>,
     std::vector<std::shared_ptr<const core::Concept>>,
-    std::vector<std::shared_ptr<const core::Role>>
+    std::vector<std::shared_ptr<const core::Role>>,
+    std::vector<std::shared_ptr<const core::FrameUnary>>,
+    std::vector<std::shared_ptr<const core::FrameBinary>>
 >;
 
 /// @brief Provides functionality for automatically generating state features
@@ -41,6 +43,7 @@ public:
         const core::States& states,
         int concept_complexity_limit=9,
         int role_complexity_limit=9,
+        int frame_complexity_limit=9,
         int boolean_complexity_limit=9,
         int count_numerical_complexity_limit=9,
         int distance_numerical_complexity_limit=9,
@@ -78,6 +81,8 @@ public:
     void set_generate_top_role(bool enable);
     void set_generate_transitive_closure_role(bool enable);
     void set_generate_transitive_reflexive_closure_role(bool enable);
+    void set_generate_primitive_frame_unary(bool enable);
+    void set_generate_primitive_frame_binary(bool enable);
 };
 
 
@@ -87,6 +92,7 @@ extern GeneratedFeatures generate_features(
     const core::States& states,
     int concept_complexity_limit=9,
     int role_complexity_limit=9,
+    int frame_complexity_limit=9,
     int boolean_complexity_limit=9,
     int count_numerical_complexity_limit=9,
     int distance_numerical_complexity_limit=9,
@@ -122,7 +128,9 @@ extern GeneratedFeatures generate_features(
     bool generate_til_c_role=true,
     bool generate_top_role=false,
     bool generate_transitive_closure_role=true,
-    bool generate_transitive_reflexive_closure_role=false);
+    bool generate_transitive_reflexive_closure_role=false,
+    bool generate_primitive_frame_unary=true,
+    bool generate_primitive_frame_binary=true);
 }
 
 #endif

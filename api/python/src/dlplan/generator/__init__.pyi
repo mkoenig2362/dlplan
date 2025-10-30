@@ -9,6 +9,7 @@ class FeatureGenerator:
         states: List[State],
         concept_complexity_limit: int = 9,
         role_complexity_limit: int = 9,
+        frame_complexity_limit: int = 9,
         boolean_complexity_limit: int = 9,
         count_numerical_complexity_limit: int = 9,
         distance_numerical_complexity_limit: int = 9,
@@ -45,6 +46,8 @@ class FeatureGenerator:
     def set_generate_top_role(self, enable: bool) -> None: ...
     def set_generate_transitive_closure_role(self, enable: bool) -> None: ...
     def set_generate_transitive_reflexive_closure_role(self, enable: bool) -> None: ...
+    def set_generate_primitive_frame_unary(self, enable: bool) -> None: ...
+    def set_generate_primitive_frame_binary(self, enable: bool) -> None: ...
 
 
 def generate_features(self, 
@@ -52,6 +55,7 @@ def generate_features(self,
     states: List[State],
     concept_complexity_limit: int = 9,
     role_complexity_limit: int = 9,
+    frame_complexity_limit: int = 9,
     boolean_complexity_limit: int = 9,
     count_numerical_complexity_limit: int = 9,
     distance_numerical_complexity_limit: int = 9,
@@ -87,4 +91,7 @@ def generate_features(self,
     generate_til_c_role: bool = True,
     generate_top_role: bool = False,
     generate_transitive_closure_role: bool = True,
-    generate_transitive_reflexive_closure_role: bool = False) -> List[str]: ...
+    generate_transitive_reflexive_closure_role: bool = False,
+    generate_primitive_frame_unary: bool = True,
+    generate_primitive_frame_binary: bool = True
+    ) -> List[str]: ...

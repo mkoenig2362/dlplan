@@ -77,6 +77,14 @@ std::shared_ptr<const NamedRole> PolicyFactory::make_role(const std::string& key
     return m_pImpl->make_role(key, role);
 }
 
+std::shared_ptr<const NamedFrameUnary> PolicyFactory::make_frame_unary(const std::string& key, const std::shared_ptr<const core::FrameUnary>& frame_unary) {
+    return m_pImpl->make_frame_unary(key, frame_unary);
+}
+
+std::shared_ptr<const NamedFrameBinary> PolicyFactory::make_frame_binary(const std::string& key, const std::shared_ptr<const core::FrameBinary>& frame_binary) {
+    return m_pImpl->make_frame_binary(key, frame_binary);
+}
+
 std::shared_ptr<const BaseCondition> PolicyFactory::make_pos_condition(const std::shared_ptr<const NamedBoolean>& boolean) {
     return m_pImpl->make_pos_condition(boolean);
 }
@@ -204,6 +212,18 @@ namespace std {
         return *left_role < *right_role;
     }
 
+    bool less<std::shared_ptr<const dlplan::policy::NamedFrameUnary>>::operator()(
+        const std::shared_ptr<const dlplan::policy::NamedFrameUnary>& left_frame_unary,
+        const std::shared_ptr<const dlplan::policy::NamedFrameUnary>& right_frame_unary) const {
+        return *left_frame_unary < *right_frame_unary;
+    }
+
+    bool less<std::shared_ptr<const dlplan::policy::NamedFrameBinary>>::operator()(
+        const std::shared_ptr<const dlplan::policy::NamedFrameBinary>& left_frame_binary,
+        const std::shared_ptr<const dlplan::policy::NamedFrameBinary>& right_frame_binary) const {
+        return *left_frame_binary < *right_frame_binary;
+    }
+
     bool less<std::shared_ptr<const dlplan::policy::Rule>>::operator()(
         const std::shared_ptr<const dlplan::policy::Rule>& left_rule,
         const std::shared_ptr<const dlplan::policy::Rule>& right_rule) const {
@@ -231,6 +251,14 @@ namespace std {
 
     std::size_t hash<dlplan::policy::NamedRole>::operator()(const dlplan::policy::NamedRole& role) const {
         return role.hash();
+    }
+
+    std::size_t hash<dlplan::policy::NamedFrameUnary>::operator()(const dlplan::policy::NamedFrameUnary& frame_unary) const {
+        return frame_unary.hash();
+    }
+
+    std::size_t hash<dlplan::policy::NamedFrameBinary>::operator()(const dlplan::policy::NamedFrameBinary& frame_binary) const {
+        return frame_binary.hash();
     }
 
     std::size_t hash<dlplan::policy::Rule>::operator()(const dlplan::policy::Rule& rule) const {

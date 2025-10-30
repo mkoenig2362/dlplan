@@ -14,7 +14,7 @@ using namespace dlplan::generator;
 void init_generator(py::module_ &m_generator) {
     py::class_<FeatureGenerator>(m_generator, "FeatureGenerator")
         .def(py::init<>())
-        .def("generate", &FeatureGenerator::generate, py::arg("factory"), py::arg("states"), py::arg("concept_complexity_limit") = 9, py::arg("role_complexity_limit") = 9, py::arg("boolean_complexity_limit") = 9, py::arg("count_numerical_complexity_limit") = 9, py::arg("distance_numerical_complexity_limit") = 9, py::arg("time_limit") = 3600, py::arg("feature_limit") = 10000)
+        .def("generate", &FeatureGenerator::generate, py::arg("factory"), py::arg("states"), py::arg("concept_complexity_limit") = 9, py::arg("role_complexity_limit") = 9, py::arg("frame_complexity_limit") = 9, py::arg("boolean_complexity_limit") = 9, py::arg("count_numerical_complexity_limit") = 9, py::arg("distance_numerical_complexity_limit") = 9, py::arg("time_limit") = 3600, py::arg("feature_limit") = 10000)
         .def("set_generate_empty_boolean", &FeatureGenerator::set_generate_empty_boolean)
         .def("set_generate_inclusion_boolean", &FeatureGenerator::set_generate_inclusion_boolean)
         .def("set_generate_nullary_boolean", &FeatureGenerator::set_generate_nullary_boolean)
@@ -46,6 +46,8 @@ void init_generator(py::module_ &m_generator) {
         .def("set_generate_top_role", &FeatureGenerator::set_generate_top_role)
         .def("set_generate_transitive_closure_role", &FeatureGenerator::set_generate_transitive_closure_role)
         .def("set_generate_transitive_reflexive_closure_role", &FeatureGenerator::set_generate_transitive_reflexive_closure_role)
+        .def("set_generate_primitive_frame_unary", &FeatureGenerator::set_generate_primitive_frame_unary)
+        .def("set_generate_primitive_frame_binary", &FeatureGenerator::set_generate_primitive_frame_binary)
     ;
 
     m_generator.def("generate_features", generate_features,
@@ -53,6 +55,7 @@ void init_generator(py::module_ &m_generator) {
         py::arg("states"),
         py::arg("concept_complexity_limit") = 9,
         py::arg("role_complexity_limit") = 9,
+        py::arg("frame_complexity_limit") = 9,
         py::arg("boolean_complexity_limit") = 9,
         py::arg("count_numerical_complexity_limit") = 9,
         py::arg("distance_numerical_complexity_limit") = 9,
@@ -88,5 +91,7 @@ void init_generator(py::module_ &m_generator) {
         py::arg("generate_til_c_role") = true,
         py::arg("generate_top_role") = false,
         py::arg("generate_transitive_closure_role") = true,
-        py::arg("generate_transitive_reflexive_closure_role") = false);
+        py::arg("generate_transitive_reflexive_closure_role") = false,
+        py::arg("generate_primitive_frame_unary") = true,
+        py::arg("generate_primitive_frame_binary") = true);
 }

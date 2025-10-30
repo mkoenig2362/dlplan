@@ -99,11 +99,15 @@ using NamedBoolean = NamedElement<core::Boolean>;
 using NamedNumerical = NamedElement<core::Numerical>;
 using NamedConcept = NamedElement<core::Concept>;
 using NamedRole = NamedElement<core::Role>;
+using NamedFrameUnary = NamedElement<core::FrameUnary>;
+using NamedFrameBinary = NamedElement<core::FrameBinary>;
 
 using Booleans = std::set<std::shared_ptr<const NamedBoolean>, ScoreCompare<const NamedBoolean>>;
 using Numericals = std::set<std::shared_ptr<const NamedNumerical>, ScoreCompare<const NamedNumerical>>;
 using Concepts = std::set<std::shared_ptr<const NamedConcept>, ScoreCompare<const NamedConcept>>;
 using Roles = std::set<std::shared_ptr<const NamedRole>, ScoreCompare<const NamedRole>>;
+using FramesUnary = std::set<std::shared_ptr<const NamedFrameUnary>, ScoreCompare<const NamedFrameUnary>>;
+using FramesBinary = std::set<std::shared_ptr<const NamedFrameBinary>, ScoreCompare<const NamedFrameBinary>>;
 
 /// @brief Represents the abstract base class of a feature condition and
 ///        provides functionality to access its underlying data and for
@@ -280,6 +284,8 @@ public:
     std::shared_ptr<const NamedNumerical> make_numerical(const std::string& key, const std::shared_ptr<const core::Numerical>& numerical);
     std::shared_ptr<const NamedConcept> make_concept(const std::string& key, const std::shared_ptr<const core::Concept>& concept_);
     std::shared_ptr<const NamedRole> make_role(const std::string& key, const std::shared_ptr<const core::Role>& role);
+    std::shared_ptr<const NamedFrameUnary> make_frame_unary(const std::string& key, const std::shared_ptr<const core::FrameUnary>& frame_unary);
+    std::shared_ptr<const NamedFrameBinary> make_frame_binary(const std::string& key, const std::shared_ptr<const core::FrameBinary>& frame_binary);
 
     /**
      * Uniquely adds a condition (resp. effect) and returns it.
@@ -381,6 +387,22 @@ namespace std {
     };
 
     template<>
+    struct less<std::shared_ptr<const dlplan::policy::NamedFrameUnary>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::NamedFrameUnary>& left_frame_unary,
+            const std::shared_ptr<const dlplan::policy::NamedFrameUnary>& right_frame_unary) const;
+    };
+
+    template<>
+    struct less<std::shared_ptr<const dlplan::policy::NamedFrameBinary>>
+    {
+        bool operator()(
+            const std::shared_ptr<const dlplan::policy::NamedFrameBinary>& left_frame_binary,
+            const std::shared_ptr<const dlplan::policy::NamedFrameBinary>& right_frame_binary) const;
+    };
+
+    template<>
     struct less<std::shared_ptr<const dlplan::policy::Rule>>
     {
         bool operator()(
@@ -421,6 +443,18 @@ namespace std {
     };
 
     template<>
+    struct hash<dlplan::policy::NamedFrameUnary>
+    {
+        std::size_t operator()(const dlplan::policy::NamedFrameUnary& frame_unary) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::NamedFrameBinary>
+    {
+        std::size_t operator()(const dlplan::policy::NamedFrameBinary& frame_binary) const;
+    };
+
+    template<>
     struct hash<dlplan::policy::Rule>
     {
         std::size_t operator()(const dlplan::policy::Rule& rule) const;
@@ -455,6 +489,18 @@ namespace std {
     struct hash<dlplan::policy::Roles>
     {
         std::size_t operator()(const dlplan::policy::Roles& roles) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::FramesUnary>
+    {
+        std::size_t operator()(const dlplan::policy::FramesUnary& frames_unary) const;
+    };
+
+    template<>
+    struct hash<dlplan::policy::FramesBinary>
+    {
+        std::size_t operator()(const dlplan::policy::FramesBinary& frames_binary) const;
     };
 
     template<>

@@ -49,6 +49,44 @@ void init_core(py::module_ &m_core) {
         .def("get_num_objects", &RoleDenotation::get_num_objects)
     ;
 
+    py::class_<FrameUnaryDenotation, std::shared_ptr<FrameUnaryDenotation>>(m_core, "FrameUnaryDenotation")
+        .def(py::init<int>())
+        .def("__eq__", &FrameUnaryDenotation::are_equal_impl)
+        .def("__ne__", &FrameUnaryDenotation::operator!=)
+        .def("__str__", py::overload_cast<>(&FrameUnaryDenotation::str, py::const_))
+        .def("__len__", &FrameUnaryDenotation::size)
+        .def("__hash__", &FrameUnaryDenotation::hash)
+        .def("get_value", &FrameUnaryDenotation::get_value)
+        .def("set_value", &FrameUnaryDenotation::set_value)
+        .def("contains", &FrameUnaryDenotation::contains)
+        .def("insert", &FrameUnaryDenotation::insert)
+        .def("empty", &FrameUnaryDenotation::empty)
+        .def("intersects", &FrameUnaryDenotation::intersects)
+        .def("is_subset_of", &FrameUnaryDenotation::is_subset_of)
+        .def("to_vector", &FrameUnaryDenotation::to_vector)
+        .def("to_sorted_vector", &FrameUnaryDenotation::to_sorted_vector)
+        .def("get_num_objects", &FrameUnaryDenotation::get_num_objects)
+    ;
+
+    py::class_<FrameBinaryDenotation, std::shared_ptr<FrameBinaryDenotation>>(m_core, "FrameBinaryDenotation")
+        .def(py::init<int>())
+        .def("__eq__", &FrameBinaryDenotation::are_equal_impl)
+        .def("__ne__", &FrameBinaryDenotation::operator!=)
+        .def("__str__", py::overload_cast<>(&FrameBinaryDenotation::str, py::const_))
+        .def("__len__", &FrameBinaryDenotation::size)
+        .def("__hash__", &FrameBinaryDenotation::hash)
+        .def("get_value", &FrameBinaryDenotation::get_value)
+        .def("set_value", &FrameBinaryDenotation::set_value)
+        .def("contains", &FrameBinaryDenotation::contains)
+        .def("insert", &FrameBinaryDenotation::insert)
+        .def("empty", &FrameBinaryDenotation::empty)
+        .def("intersects", &FrameBinaryDenotation::intersects)
+        .def("is_subset_of", &FrameBinaryDenotation::is_subset_of)
+        .def("to_vector", &FrameBinaryDenotation::to_vector)
+        .def("to_sorted_vector", &FrameBinaryDenotation::to_sorted_vector)
+        .def("get_num_objects", &FrameBinaryDenotation::get_num_objects)
+    ;
+
     py::class_<DenotationsCaches, std::shared_ptr<DenotationsCaches>>(m_core, "DenotationsCaches")
         .def(py::init<>())
     ;
@@ -146,12 +184,17 @@ void init_core(py::module_ &m_core) {
         .def(py::init<int, std::shared_ptr<InstanceInfo>, const std::vector<Atom>&>(), py::arg("index"), py::arg("instance_info"), py::arg("atoms"))
         .def(py::init<int, std::shared_ptr<InstanceInfo>, const std::vector<int>&>(), py::arg("index"), py::arg("instance_info"), py::arg("atom_indices"))
         .def(py::init<int, std::shared_ptr<InstanceInfo>, std::vector<int>&&>(), py::arg("index"), py::arg("instance_info"), py::arg("atom_indices"))
+        .def(py::init<int, std::shared_ptr<InstanceInfo>, const std::vector<Atom>&, const std::vector<float>&>(), py::arg("index"), py::arg("instance_info"), py::arg("atoms"), py::arg("atom_values"))
+        .def(py::init<int, std::shared_ptr<InstanceInfo>, const std::vector<int>&, const std::vector<float>&>(), py::arg("index"), py::arg("instance_info"), py::arg("atom_indices"), py::arg("atom_values"))
+        .def(py::init<int, std::shared_ptr<InstanceInfo>, std::vector<int>&&, std::vector<float>&&>(), py::arg("index"), py::arg("instance_info"), py::arg("atom_indices"), py::arg("atom_values"))
         .def("__eq__", &State::are_equal_impl)
         .def("__ne__", &State::operator!=)
         .def("__str__",  py::overload_cast<>(&State::str, py::const_))
         .def("__hash__", &State::hash)
         .def("get_index", &State::get_index)
         .def("get_atom_indices", &State::get_atom_indices)
+        .def("get_atom_values", &State::get_atom_values)
+        .def("value_of", &State::value_of, py::arg("atom_id"))
         .def("get_instance_info", &State::get_instance_info)
     ;
 
@@ -177,6 +220,32 @@ void init_core(py::module_ &m_core) {
         .def("evaluate", py::overload_cast<const State&, DenotationsCaches&>(&Role::evaluate, py::const_))
         .def("evaluate", [](const Role& self, const States& states, DenotationsCaches& caches) {
             // std::shared_ptr<const std::vector<std::shared_ptr<const RoleDenotation>>> is not registered so we must dereference to obtain a registered type
+            return *self.evaluate(states, caches);
+        })
+    ;
+
+    py::class_<FrameUnary, std::shared_ptr<FrameUnary>>(m_core, "FrameUnary")
+        .def("__str__", py::overload_cast<>(&FrameUnary::str, py::const_))
+        .def("compute_complexity", &FrameUnary::compute_complexity)
+        .def("get_index", &FrameUnary::get_index)
+        .def("get_vocabulary_info", &FrameUnary::get_vocabulary_info)
+        .def("evaluate", py::overload_cast<const State&>(&FrameUnary::evaluate, py::const_))
+        .def("evaluate", py::overload_cast<const State&, DenotationsCaches&>(&FrameUnary::evaluate, py::const_))
+        .def("evaluate", [](const FrameUnary& self, const States& states, DenotationsCaches& caches) {
+            // std::shared_ptr<const std::vector<std::shared_ptr<const FrameUnaryDenotation>>> is not registered so we must dereference to obtain a registered type
+            return *self.evaluate(states, caches);
+        })
+    ;
+
+    py::class_<FrameBinary, std::shared_ptr<FrameBinary>>(m_core, "FrameBinary")
+        .def("__str__", py::overload_cast<>(&FrameBinary::str, py::const_))
+        .def("compute_complexity", &FrameBinary::compute_complexity)
+        .def("get_index", &FrameBinary::get_index)
+        .def("get_vocabulary_info", &FrameBinary::get_vocabulary_info)
+        .def("evaluate", py::overload_cast<const State&>(&FrameBinary::evaluate, py::const_))
+        .def("evaluate", py::overload_cast<const State&, DenotationsCaches&>(&FrameBinary::evaluate, py::const_))
+        .def("evaluate", [](const FrameBinary& self, const States& states, DenotationsCaches& caches) {
+            // std::shared_ptr<const std::vector<std::shared_ptr<const FrameBinaryDenotation>>> is not registered so we must dereference to obtain a registered type
             return *self.evaluate(states, caches);
         })
     ;
@@ -212,6 +281,8 @@ void init_core(py::module_ &m_core) {
 
         .def("parse_concept", py::overload_cast<const std::string&, const std::string&>(&SyntacticElementFactory::parse_concept), py::arg("description"), py::arg("filename") = "")
         .def("parse_role", py::overload_cast<const std::string&, const std::string&>(&SyntacticElementFactory::parse_role), py::arg("description"), py::arg("filename") = "")
+        .def("parse_frame_unary", py::overload_cast<const std::string&, const std::string&>(&SyntacticElementFactory::parse_frame_unary), py::arg("description"), py::arg("filename") = "")
+        .def("parse_frame_binary", py::overload_cast<const std::string&, const std::string&>(&SyntacticElementFactory::parse_frame_binary), py::arg("description"), py::arg("filename") = "")
         .def("parse_numerical", py::overload_cast<const std::string&, const std::string&>(&SyntacticElementFactory::parse_numerical), py::arg("description"), py::arg("filename") = "")
         .def("parse_boolean", py::overload_cast<const std::string&, const std::string&>(&SyntacticElementFactory::parse_boolean), py::arg("description"), py::arg("filename") = "")
 
@@ -255,6 +326,9 @@ void init_core(py::module_ &m_core) {
         .def("make_top_role", &SyntacticElementFactory::make_top_role)
         .def("make_transitive_closure", &SyntacticElementFactory::make_transitive_closure)
         .def("make_transitive_reflexive_closure", &SyntacticElementFactory::make_transitive_reflexive_closure)
+
+        .def("make_primitive_frame_unary", &SyntacticElementFactory::make_primitive_frame_unary)
+        .def("make_primitive_frame_binary", &SyntacticElementFactory::make_primitive_frame_binary)
 
         .def("get_vocabulary_info", &SyntacticElementFactory::get_vocabulary_info)
     ;
