@@ -60,6 +60,7 @@ namespace dlplan::core::ast
     struct PrimitiveFrameBinary;
     struct RestrictFrameUnary;
     struct RestrictFrameBinary;
+    struct DistanceFrame;
 
     /* Basic character compounds */
     struct Name : x3::position_tagged {
@@ -153,7 +154,8 @@ namespace dlplan::core::ast
 
     struct FrameBinary : x3::position_tagged, x3::variant<
         x3::forward_ast<PrimitiveFrameBinary>,
-        x3::forward_ast<RestrictFrameBinary>> {
+        x3::forward_ast<RestrictFrameBinary>,
+        x3::forward_ast<DistanceFrame>> {
         using base_type::base_type;
         using base_type::operator=;
     };
@@ -375,6 +377,10 @@ namespace dlplan::core::ast
     struct RestrictFrameBinary : x3::position_tagged {
         FrameBinary frame_binary;
         Role role;
+    };
+
+    struct DistanceFrame : x3::position_tagged {
+        FrameUnary frame_unary;
     };
 }
 

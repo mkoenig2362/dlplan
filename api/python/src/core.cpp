@@ -339,6 +339,7 @@ void init_core(py::module_ &m_core) {
         .def("make_primitive_frame_binary", &SyntacticElementFactory::make_primitive_frame_binary)
         .def("make_restrict_frame_unary", &SyntacticElementFactory::make_restrict_frame_unary)
         .def("make_restrict_frame_binary", &SyntacticElementFactory::make_restrict_frame_binary)
+        .def("make_distance_frame", &SyntacticElementFactory::make_distance_frame)
 
         .def("get_vocabulary_info", &SyntacticElementFactory::get_vocabulary_info)
     ;

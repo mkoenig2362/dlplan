@@ -53,6 +53,7 @@ void init_generator(py::module_ &m_generator) {
         .def("set_generate_primitive_frame_binary", &FeatureGenerator::set_generate_primitive_frame_binary)
         .def("set_generate_restrict_frame_unary", &FeatureGenerator::set_generate_restrict_frame_unary)
         .def("set_generate_restrict_frame_binary", &FeatureGenerator::set_generate_restrict_frame_binary)
+        .def("set_generate_distance_frame", &FeatureGenerator::set_generate_distance_frame)
     ;
 
     m_generator.def("generate_features", generate_features,
@@ -103,5 +104,6 @@ void init_generator(py::module_ &m_generator) {
         py::arg("generate_primitive_frame_unary") = true,
         py::arg("generate_primitive_frame_binary") = true,
         py::arg("generate_restrict_frame_unary") = true,
-        py::arg("generate_restrict_frame_binary") = true);
+        py::arg("generate_restrict_frame_binary") = true,
+        py::arg("generate_distance_frame") = true);
 }

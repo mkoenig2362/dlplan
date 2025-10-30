@@ -194,6 +194,10 @@ void FeatureGenerator::set_generate_restrict_frame_binary(bool enable) {
     m_pImpl->set_generate_restrict_frame_binary(enable);
 }
 
+void FeatureGenerator::set_generate_distance_frame(bool enable) {
+    m_pImpl->set_generate_distance_frame(enable);
+}
+
 GeneratedFeatures generate_features(
     core::SyntacticElementFactory& factory,
     const core::States& states,
@@ -242,7 +246,8 @@ GeneratedFeatures generate_features(
     bool generate_primitive_frame_unary,
     bool generate_primitive_frame_binary,
     bool generate_restrict_frame_unary,
-    bool generate_restrict_frame_binary) {
+    bool generate_restrict_frame_binary,
+    bool generate_distance_frame) {
     FeatureGeneratorImpl generator = FeatureGeneratorImpl();
     generator.set_generate_empty_boolean(generate_empty_boolean);
     generator.set_generate_inclusion_boolean(generate_inclusion_boolean);
@@ -282,6 +287,7 @@ GeneratedFeatures generate_features(
     generator.set_generate_primitive_frame_binary(generate_primitive_frame_binary);
     generator.set_generate_restrict_frame_unary(generate_restrict_frame_unary);
     generator.set_generate_restrict_frame_binary(generate_restrict_frame_binary);
+    generator.set_generate_distance_frame(generate_distance_frame);
     return generator.generate(factory, states, concept_complexity_limit,
         role_complexity_limit,
         frame_complexity_limit,

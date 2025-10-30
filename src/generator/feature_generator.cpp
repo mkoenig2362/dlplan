@@ -53,7 +53,8 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
       f_primitive_unary(std::make_shared<rules::PrimitiveFrameUnary>()),
       f_primitive_binary(std::make_shared<rules::PrimitiveFrameBinary>()),
       f_restrict_unary(std::make_shared<rules::RestrictFrameUnary>()),
-      f_restrict_binary(std::make_shared<rules::RestrictFrameBinary>()) {
+      f_restrict_binary(std::make_shared<rules::RestrictFrameBinary>()),
+      f_distance(std::make_shared<rules::DistanceFrame>()) {
     m_primitive_rules.emplace_back(b_nullary);
     m_primitive_rules.emplace_back(c_one_of);
     m_primitive_rules.emplace_back(c_top);
@@ -88,6 +89,7 @@ FeatureGeneratorImpl::FeatureGeneratorImpl()
 
     m_frame_inductive_rules.emplace_back(f_restrict_unary);
     m_frame_inductive_rules.emplace_back(f_restrict_binary);
+    m_frame_inductive_rules.emplace_back(f_distance);
 
     m_boolean_inductive_rules.emplace_back(b_empty);
     m_boolean_inductive_rules.emplace_back(b_inclusion);
@@ -121,10 +123,10 @@ GeneratedFeatures FeatureGeneratorImpl::generate(
     int time_limit,
     int feature_limit)
 {
-    std::cout << "hello" << "\n";
-    std::cout << "\n";
-    std::cout << "\n";
+    std::cout << "Generating features" << "\n";
     std::cout << states.size();
+    std::cout << "\n";
+    std::cout << "\n";
     std::cout << "\n";
     
 
@@ -394,6 +396,10 @@ void FeatureGeneratorImpl::set_generate_restrict_frame_unary(bool enable) {
 
 void FeatureGeneratorImpl::set_generate_restrict_frame_binary(bool enable) {
     f_restrict_binary->set_enabled(enable);
+}
+
+void FeatureGeneratorImpl::set_generate_distance_frame(bool enable) {
+    f_distance->set_enabled(enable);
 }
 
 }

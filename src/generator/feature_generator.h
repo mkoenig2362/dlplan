@@ -33,6 +33,7 @@
 #include "rules/frames/primitive_binary.h"
 #include "rules/frames/restrict_unary.h"
 #include "rules/frames/restrict_binary.h"
+#include "rules/frames/distance.h"
 
 #include "rules/numericals/concept_distance.h"
 #include "rules/numericals/count.h"
@@ -113,6 +114,7 @@ private:
     Rule_Ptr f_primitive_binary;
     Rule_Ptr f_restrict_unary;
     Rule_Ptr f_restrict_binary;
+    Rule_Ptr f_distance;
 
 private:
     /**
@@ -206,6 +208,7 @@ public:
     void set_generate_primitive_frame_binary(bool enable);
     void set_generate_restrict_frame_unary(bool enable);
     void set_generate_restrict_frame_binary(bool enable);
+    void set_generate_distance_frame(bool enable);
 };
 
 }

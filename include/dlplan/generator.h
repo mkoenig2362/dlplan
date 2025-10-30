@@ -88,6 +88,7 @@ public:
     void set_generate_primitive_frame_binary(bool enable);
     void set_generate_restrict_frame_unary(bool enable);
     void set_generate_restrict_frame_binary(bool enable);
+    void set_generate_distance_frame(bool enable);
 };
 
 
@@ -140,7 +141,8 @@ extern GeneratedFeatures generate_features(
     bool generate_primitive_frame_unary=true,
     bool generate_primitive_frame_binary=true,
     bool generate_restrict_frame_unary=true,
-    bool generate_restrict_frame_binary=true);
+    bool generate_restrict_frame_binary=true,
+    bool generate_distance_frame=true);
 }
 
 #endif

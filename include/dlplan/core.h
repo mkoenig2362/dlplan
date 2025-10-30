@@ -983,6 +983,7 @@ public:
     std::shared_ptr<const FrameBinary> make_primitive_frame_binary(const Function& function, int pos_1, int pos_2);
     std::shared_ptr<const FrameUnary> make_restrict_frame_unary(const std::shared_ptr<const FrameUnary>& frame_unary, const std::shared_ptr<const Concept>& concept_);
     std::shared_ptr<const FrameBinary> make_restrict_frame_binary(const std::shared_ptr<const FrameBinary>& frame_binary, const std::shared_ptr<const Role>& role);
+    std::shared_ptr<const FrameBinary> make_distance_frame(const std::shared_ptr<const FrameUnary>& frame_unary);
 };
 
 }

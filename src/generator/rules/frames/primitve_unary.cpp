@@ -7,7 +7,6 @@ namespace dlplan::generator::rules {
 void PrimitiveFrameUnary::generate_impl(const core::States& states, int target_complexity, GeneratorData& data, core::DenotationsCaches& caches) {
     assert(target_complexity == 1);
     core::SyntacticElementFactory& factory = data.m_factory;
-    std::cout << "hello there primitive unary frame" << "\n";
     for (const auto& function : factory.get_vocabulary_info()->get_functions()) {
         if (function.get_arity() == 1) {
             auto element = factory.make_primitive_frame_unary(function, 0);
