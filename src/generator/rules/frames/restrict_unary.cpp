@@ -12,7 +12,7 @@ void RestrictFrameUnary::generate_impl(const core::States& states, int target_co
             for (const auto& c : data.m_concepts_by_iteration[j]) {
                 auto element = factory.make_restrict_frame_unary(f, c);
                 auto denotations = element->evaluate(states, caches);
-                if (data.m_frame_unary_hash_table.insert(denotations).second) {
+                if (states.size() == 0 || data.m_frame_unary_hash_table.insert(denotations).second) {
                     std::get<4>(data.m_generated_features).push_back(element);
                     data.m_frames_unary_by_iteration[target_complexity].push_back(std::move(element));
                     increment_generated();

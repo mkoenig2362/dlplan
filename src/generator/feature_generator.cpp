@@ -124,6 +124,7 @@ GeneratedFeatures FeatureGeneratorImpl::generate(
     std::cout << "hello" << "\n";
     std::cout << "\n";
     std::cout << "\n";
+    std::cout << states.size();
     std::cout << "\n";
     
 
