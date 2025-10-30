@@ -580,7 +580,8 @@ parse(const ast::RestrictFrameBinary& node, const error_handler_type& error_hand
 std::shared_ptr<const core::FrameBinary>
 parse(const ast::DistanceFrame& node, const error_handler_type& error_handler, SyntacticElementFactory& context) {
     return context.make_distance_frame(
-        parse(node.frame_unary, error_handler, context));
+        parse(node.frame_unary_1, error_handler, context),
+        parse(node.frame_unary_2, error_handler, context));
 }
 
 boost::variant<std::shared_ptr<const core::Concept>, std::shared_ptr<const core::Role>>

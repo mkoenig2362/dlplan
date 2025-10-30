@@ -371,7 +371,7 @@ namespace dlplan::core::parser
 
     const auto restrict_frame_binary_def = lit("f_restrict_binary") > lit('(') > frame_binary > lit(',') > role > lit(')');
     
-    const auto distance_frame_def = lit("f_distance") > lit('(') > frame_unary > lit(')');
+    const auto distance_frame_def = lit("f_distance") > lit('(') > frame_unary > lit(',') > frame_unary > lit(')');
 
     const auto boolean_def = empty_boolean | inclusion_boolean | nullary_boolean;
     const auto boolean_root_def = eps > boolean;

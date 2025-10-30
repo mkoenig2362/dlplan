@@ -56,6 +56,6 @@ BOOST_FUSION_ADAPT_STRUCT(dlplan::core::ast::PrimitiveFrameUnary, function, pos)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::ast::PrimitiveFrameBinary, function, pos_1, pos_2)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::ast::RestrictFrameUnary, frame_unary, concept_)
 BOOST_FUSION_ADAPT_STRUCT(dlplan::core::ast::RestrictFrameBinary, frame_binary, role)
-BOOST_FUSION_ADAPT_STRUCT(dlplan::core::ast::DistanceFrame, frame_unary)
+BOOST_FUSION_ADAPT_STRUCT(dlplan::core::ast::DistanceFrame, frame_unary_1, frame_unary_2)
 
 #endif

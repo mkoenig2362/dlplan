@@ -123,13 +123,7 @@ GeneratedFeatures FeatureGeneratorImpl::generate(
     int time_limit,
     int feature_limit)
 {
-    std::cout << "Generating features" << "\n";
-    std::cout << states.size();
-    std::cout << "\n";
-    std::cout << "\n";
-    std::cout << "\n";
     
-
     // Allow termination with ctrl+c
     auto pre_sigint_handler = std::signal(SIGINT, exit_sigint_handler);
 

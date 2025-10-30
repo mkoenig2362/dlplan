@@ -330,8 +330,8 @@ std::shared_ptr<const FrameBinary>SyntacticElementFactory::make_restrict_frame_b
     return m_pImpl->make_restrict_frame_binary(frame_binary, role);
 }
 
-std::shared_ptr<const FrameBinary>SyntacticElementFactory::make_distance_frame(const std::shared_ptr<const FrameUnary>& frame_unary) {
-    return m_pImpl->make_distance_frame(frame_unary);
+std::shared_ptr<const FrameBinary>SyntacticElementFactory::make_distance_frame(const std::shared_ptr<const FrameUnary>& frame_unary_1, const std::shared_ptr<const FrameUnary>& frame_unary_2) {
+    return m_pImpl->make_distance_frame(frame_unary_1, frame_unary_2);
 }
 
 

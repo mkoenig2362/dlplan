@@ -20,15 +20,16 @@ class ReferenceCountedObjectFactory;
 namespace dlplan::core {
 class DistanceFrame : public FrameBinary {
 private:
-    const std::shared_ptr<const FrameUnary> m_frame_unary;
+    const std::shared_ptr<const FrameUnary> m_frame_unary_1;
+    const std::shared_ptr<const FrameUnary> m_frame_unary_2;
 
-    void compute_result(const FrameUnaryDenotation& frame_denot, FrameBinaryDenotation& result) const;
+    void compute_result(const FrameUnaryDenotation& frame_denot_1, const FrameUnaryDenotation& frame_denot_2, FrameBinaryDenotation& result) const;
 
     FrameBinaryDenotation evaluate_impl(const State& state, DenotationsCaches& caches) const override;
 
     FrameBinaryDenotations evaluate_impl(const States& states, DenotationsCaches& caches) const override;
 
-    DistanceFrame(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const FrameUnary> frame_unary);
+    DistanceFrame(ElementIndex index, std::shared_ptr<VocabularyInfo> vocabulary_info, std::shared_ptr<const FrameUnary> frame_unary_1, std::shared_ptr<const FrameUnary> frame_unary_2);
 
     template<typename... Ts>
     friend class dlplan::ReferenceCountedObjectFactory;

@@ -380,7 +380,8 @@ namespace dlplan::core::ast
     };
 
     struct DistanceFrame : x3::position_tagged {
-        FrameUnary frame_unary;
+        FrameUnary frame_unary_1;
+        FrameUnary frame_unary_2;
     };
 }
 

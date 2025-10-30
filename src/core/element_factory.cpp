@@ -433,8 +433,8 @@ std::shared_ptr<const FrameBinary> SyntacticElementFactoryImpl::make_restrict_fr
     return m_cache.get_or_create<RestrictFrameBinary>(m_vocabulary_info, frame_binary, role).object;
 }
 
-std::shared_ptr<const FrameBinary> SyntacticElementFactoryImpl::make_distance_frame(const std::shared_ptr<const FrameUnary>& frame_unary) {
-    return m_cache.get_or_create<DistanceFrame>(m_vocabulary_info, frame_unary).object;
+std::shared_ptr<const FrameBinary> SyntacticElementFactoryImpl::make_distance_frame(const std::shared_ptr<const FrameUnary>& frame_unary_1, const std::shared_ptr<const FrameUnary>& frame_unary_2) {
+    return m_cache.get_or_create<DistanceFrame>(m_vocabulary_info, frame_unary_1, frame_unary_2).object;
 }
 
 std::shared_ptr<VocabularyInfo> SyntacticElementFactoryImpl::get_vocabulary_info() const {
